@@ -10,15 +10,22 @@ const router = express.Router();
 let gfsBucket;
 
 function initGridFS() {
+  console.log('initGridFS called, db exists:', !!mongoose.connection.db);
   if (!gfsBucket && mongoose.connection.db) {
     gfsBucket = new GridFSBucket(mongoose.connection.db, { bucketName: 'uploads' });
-    console.log('GridFS initialized');
+    console.log('GridFS bucket created');
+  } else if (gfsBucket) {
+    console.log('GridFS bucket already exists');
   }
   return gfsBucket;
 }
 
 mongoose.connection.on('open', () => {
   initGridFS();
+});
+
+mongoose.connection.on('error', (err) => {
+  console.log('MongoDB connection error:', err);
 });
 
 const storage = multer.memoryStorage();
@@ -28,24 +35,29 @@ router.post('/', auth, upload.single('file'), async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ message: 'Archivo requerido' });
     
-    initGridFS();
+    const gfs = initGridFS();
+    if (!gfs) return res.status(500).json({ message: 'GridFS no inicializado' });
     
-    const fileId = new mongoose.Types.ObjectId();
-    console.log('Uploading file:', req.file.originalname, 'size:', req.file.size);
+    const { MongoClient } = require('mongodb');
+    const mongodb = require('mongodb');
+    const fileId = new mongodb.ObjectId();
+    console.log('Uploading file:', req.file.originalname, 'size:', req.file.size, 'id:', fileId.toString());
     
-    const uploadStream = gfsBucket.openUploadStream(fileId, {
+    const uploadStream = gfs.openUploadStream(fileId, {
       filename: req.file.originalname,
       contentType: req.file.mimetype
     });
     
-    uploadStream.end(req.file.buffer);
+    uploadStream.write(req.file.buffer);
+    uploadStream.end();
     
     await new Promise((resolve, reject) => {
-      uploadStream.on('finish', resolve);
+      uploadStream.on('finish', () => {
+        console.log('Upload stream finished');
+        resolve();
+      });
       uploadStream.on('error', reject);
     });
-    
-    console.log('File uploaded, fileId:', fileId.toString());
 
     const { title, description, category, parentId, tags } = req.body;
     const resource = new Resource({
@@ -133,12 +145,16 @@ router.get('/:id', async (req, res) => {
 
 router.get('/:id/file', async (req, res) => {
   try {
-    initGridFS();
+    const gfs = initGridFS();
+    if (!gfs) return res.status(500).json({ message: 'GridFS no inicializado' });
+    
     const objectId = new mongoose.Types.ObjectId(req.params.id);
-    const files = await gfsBucket.find({ _id: objectId }).toArray();
+    console.log('Looking for file:', req.params.id);
+    
+    const files = await gfs.find({ _id: objectId }).toArray();
     
     if (!files.length) {
-      console.log('File not found:', req.params.id);
+      console.log('File not found in GridFS:', req.params.id);
       return res.status(404).json({ message: 'Archivo no encontrado' });
     }
     
@@ -147,7 +163,7 @@ router.get('/:id/file', async (req, res) => {
     res.set('Content-Type', file.contentType || 'application/octet-stream');
     res.set('Content-Disposition', `attachment; filename="${file.filename}"`);
     
-    const downloadStream = gfsBucket.openDownloadStream(objectId);
+    const downloadStream = gfs.openDownloadStream(objectId);
     downloadStream.pipe(res);
   } catch (err) {
     console.error('Download error:', err);
