@@ -68,7 +68,7 @@ export default function ResourceDetail() {
   };
 
   const downloadFile = () => {
-    window.open(`/api/resources/${resource.fileUrl}/file`, '_blank');
+    window.open(`http://localhost:5000/api/resources/${resource.fileUrl}/file`, '_blank');
   };
 
   if (loading) {
