@@ -8,9 +8,17 @@ const auth = require('../middleware/auth');
 const router = express.Router();
 
 let gfsBucket;
-const conn = mongoose.connection;
-conn.once('open', () => {
-  gfsBucket = new GridFSBucket(conn.db, { bucketName: 'uploads' });
+
+function initGridFS() {
+  if (!gfsBucket && mongoose.connection.db) {
+    gfsBucket = new GridFSBucket(mongoose.connection.db, { bucketName: 'uploads' });
+    console.log('GridFS initialized');
+  }
+  return gfsBucket;
+}
+
+mongoose.connection.on('open', () => {
+  initGridFS();
 });
 
 const storage = multer.memoryStorage();
@@ -20,9 +28,14 @@ router.post('/', auth, upload.single('file'), async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ message: 'Archivo requerido' });
     
+    initGridFS();
+    
     const fileId = new mongoose.Types.ObjectId();
+    console.log('Uploading file:', req.file.originalname, 'size:', req.file.size);
+    
     const uploadStream = gfsBucket.openUploadStream(fileId, {
-      metadata: { originalname: req.file.originalname, contentType: req.file.mimetype }
+      filename: req.file.originalname,
+      contentType: req.file.mimetype
     });
     
     uploadStream.end(req.file.buffer);
@@ -31,6 +44,8 @@ router.post('/', auth, upload.single('file'), async (req, res) => {
       uploadStream.on('finish', resolve);
       uploadStream.on('error', reject);
     });
+    
+    console.log('File uploaded, fileId:', fileId.toString());
 
     const { title, description, category, parentId, tags } = req.body;
     const resource = new Resource({
@@ -118,16 +133,24 @@ router.get('/:id', async (req, res) => {
 
 router.get('/:id/file', async (req, res) => {
   try {
-    const files = await gfsBucket.find({ _id: new mongoose.Types.ObjectId(req.params.id) }).toArray();
-    if (!files.length) return res.status(404).json({ message: 'Archivo no encontrado' });
+    initGridFS();
+    const objectId = new mongoose.Types.ObjectId(req.params.id);
+    const files = await gfsBucket.find({ _id: objectId }).toArray();
+    
+    if (!files.length) {
+      console.log('File not found:', req.params.id);
+      return res.status(404).json({ message: 'Archivo no encontrado' });
+    }
     
     const file = files[0];
-    res.set('Content-Type', file.contentType);
+    console.log('Serving file:', file.filename);
+    res.set('Content-Type', file.contentType || 'application/octet-stream');
     res.set('Content-Disposition', `attachment; filename="${file.filename}"`);
     
-    const downloadStream = gfsBucket.openDownloadStream(file._id);
+    const downloadStream = gfsBucket.openDownloadStream(objectId);
     downloadStream.pipe(res);
   } catch (err) {
+    console.error('Download error:', err);
     res.status(500).json({ message: err.message });
   }
 });
