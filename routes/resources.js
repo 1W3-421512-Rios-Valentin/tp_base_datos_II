@@ -89,6 +89,18 @@ router.get('/tree', async (req, res) => {
   }
 });
 
+router.get('/liked', auth, async (req, res) => {
+  try {
+    const resources = await Resource.find({ likes: req.user._id })
+      .populate('user', 'username avatar')
+      .sort({ createdAt: -1 });
+    
+    res.json(resources);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 router.get('/:id', async (req, res) => {
   try {
     const resource = await Resource.findByIdAndUpdate(
