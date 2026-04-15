@@ -74,6 +74,18 @@ router.get('/', async (req, res) => {
   }
 });
 
+router.get('/liked', auth, async (req, res) => {
+  try {
+    const resources = await Resource.find({ likes: req.user._id })
+      .populate('user', 'username avatar')
+      .sort({ createdAt: -1 });
+    
+    res.json(resources);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 router.get('/tree', async (req, res) => {
   try {
     const { category } = req.query;
@@ -82,18 +94,6 @@ router.get('/tree', async (req, res) => {
     
     const resources = await Resource.find(query)
       .select('title category parentId createdAt fileType');
-    
-    res.json(resources);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-});
-
-router.get('/liked', auth, async (req, res) => {
-  try {
-    const resources = await Resource.find({ likes: req.user._id })
-      .populate('user', 'username avatar')
-      .sort({ createdAt: -1 });
     
     res.json(resources);
   } catch (err) {
