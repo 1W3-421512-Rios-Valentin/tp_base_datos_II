@@ -1,32 +1,10 @@
 const express = require('express');
 const multer = require('multer');
 const mongoose = require('mongoose');
-const { GridFSBucket } = require('mongodb');
 const Resource = require('../models/Resource');
 const Comment = require('../models/Comment');
 const auth = require('../middleware/auth');
 const router = express.Router();
-
-let gfsBucket;
-
-function initGridFS() {
-  console.log('initGridFS called, db exists:', !!mongoose.connection.db);
-  if (!gfsBucket && mongoose.connection.db) {
-    gfsBucket = new GridFSBucket(mongoose.connection.db, { bucketName: 'uploads' });
-    console.log('GridFS bucket created');
-  } else if (gfsBucket) {
-    console.log('GridFS bucket already exists');
-  }
-  return gfsBucket;
-}
-
-mongoose.connection.on('open', () => {
-  initGridFS();
-});
-
-mongoose.connection.on('error', (err) => {
-  console.log('MongoDB connection error:', err);
-});
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
@@ -35,36 +13,14 @@ router.post('/', auth, upload.single('file'), async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ message: 'Archivo requerido' });
     
-    const gfs = initGridFS();
-    if (!gfs) return res.status(500).json({ message: 'GridFS no inicializado' });
+    console.log('Uploading:', req.file.originalname, 'size:', req.file.size);
     
-    const { MongoClient } = require('mongodb');
-    const mongodb = require('mongodb');
-    const fileId = new mongodb.ObjectId();
-    console.log('Uploading file:', req.file.originalname, 'size:', req.file.size, 'id:', fileId.toString());
-    
-    const uploadStream = gfs.openUploadStream(fileId, {
-      filename: req.file.originalname,
-      contentType: req.file.mimetype
-    });
-    
-    uploadStream.write(req.file.buffer);
-    uploadStream.end();
-    
-    await new Promise((resolve, reject) => {
-      uploadStream.on('finish', () => {
-        console.log('Upload stream finished');
-        resolve();
-      });
-      uploadStream.on('error', reject);
-    });
-
     const { title, description, category, parentId, tags } = req.body;
     const resource = new Resource({
       user: req.user._id,
       title,
       description,
-      fileUrl: fileId.toString(),
+      fileData: req.file.buffer,
       fileType: req.file.mimetype,
       fileName: req.file.originalname,
       category,
@@ -73,6 +29,7 @@ router.post('/', auth, upload.single('file'), async (req, res) => {
     });
     
     await resource.save();
+    console.log('Saved, id:', resource._id);
     res.status(201).json(resource);
   } catch (err) {
     console.error('Error upload:', err);
@@ -90,6 +47,7 @@ router.get('/', async (req, res) => {
     query.isPublished = true;
     
     const resources = await Resource.find(query)
+      .select('-fileData')
       .populate('user', 'username avatar')
       .sort({ createdAt: -1 })
       .skip((page - 1) * limit)
@@ -104,6 +62,7 @@ router.get('/', async (req, res) => {
 router.get('/liked', auth, async (req, res) => {
   try {
     const resources = await Resource.find({ likes: req.user._id })
+      .select('-fileData')
       .populate('user', 'username avatar')
       .sort({ createdAt: -1 });
     
@@ -134,7 +93,7 @@ router.get('/:id', async (req, res) => {
       req.params.id,
       { $inc: { views: 1 } },
       { new: true }
-    ).populate('user', 'username avatar bio');
+    ).select('-fileData').populate('user', 'username avatar bio');
     
     if (!resource) return res.status(404).json({ message: 'No encontrado' });
     res.json(resource);
@@ -145,26 +104,16 @@ router.get('/:id', async (req, res) => {
 
 router.get('/:id/file', async (req, res) => {
   try {
-    const gfs = initGridFS();
-    if (!gfs) return res.status(500).json({ message: 'GridFS no inicializado' });
+    const resource = await Resource.findById(req.params.id);
     
-    const objectId = new mongoose.Types.ObjectId(req.params.id);
-    console.log('Looking for file:', req.params.id);
-    
-    const files = await gfs.find({ _id: objectId }).toArray();
-    
-    if (!files.length) {
-      console.log('File not found in GridFS:', req.params.id);
+    if (!resource || !resource.fileData) {
       return res.status(404).json({ message: 'Archivo no encontrado' });
     }
     
-    const file = files[0];
-    console.log('Serving file:', file.filename);
-    res.set('Content-Type', file.contentType || 'application/octet-stream');
-    res.set('Content-Disposition', `attachment; filename="${file.filename}"`);
-    
-    const downloadStream = gfs.openDownloadStream(objectId);
-    downloadStream.pipe(res);
+    console.log('Serving file:', resource.fileName);
+    res.set('Content-Type', resource.fileType || 'application/octet-stream');
+    res.set('Content-Disposition', `attachment; filename="${resource.fileName}"`);
+    res.send(resource.fileData);
   } catch (err) {
     console.error('Download error:', err);
     res.status(500).json({ message: err.message });
@@ -226,7 +175,6 @@ router.delete('/:id', auth, async (req, res) => {
     const resource = await Resource.findOne({ _id: req.params.id, user: req.user._id });
     if (!resource) return res.status(404).json({ message: 'No autorizado' });
     
-    await gfsBucket.delete(new mongoose.Types.ObjectId(resource.fileUrl));
     await Resource.findByIdAndDelete(req.params.id);
     await Comment.deleteMany({ resource: req.params.id });
     

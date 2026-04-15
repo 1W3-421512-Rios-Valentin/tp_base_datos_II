@@ -4,7 +4,7 @@ const resourceSchema = new mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   title: { type: String, required: true },
   description: { type: String, default: '' },
-  fileUrl: { type: String, required: true },
+  fileData: { type: Buffer, default: null },
   fileType: { type: String, required: true },
   fileName: { type: String, required: true },
   category: { type: String, required: true },
