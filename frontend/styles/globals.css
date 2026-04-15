@@ -1,0 +1,37 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: #4F46E5;
+  --secondary: #10B981;
+}
+
+body {
+  background-color: #f8fafc;
+}
+
+.card-hover {
+  transition: all 0.2s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.file-icon {
+  @apply w-12 h-12 rounded-lg flex items-center justify-center text-2xl;
+}
+
+.dropzone {
+  @apply border-2 border-dashed border-gray-300 rounded-xl p-8 text-center cursor-pointer transition-all;
+}
+
+.dropzone:hover, .dropzone.active {
+  @apply border-primary bg-indigo-50;
+}
+
+.tree-line {
+  @apply absolute left-6 top-10 bottom-0 w-0.5 bg-gray-200;
+}
