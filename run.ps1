@@ -1,5 +1,5 @@
-$env:path = "C:\data\studytree-app"
-$env:frontpath = "C:\data\studytree-app\frontend"
+$env:path = $PSScriptRoot
+$env:frontpath = Join-Path $PSScriptRoot "frontend"
 
 $proc1 = Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd $env:path; node server.js" -PassThru -WindowStyle Minimized
 Start-Sleep -Seconds 2

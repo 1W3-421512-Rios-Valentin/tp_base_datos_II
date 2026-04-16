@@ -149,12 +149,23 @@ const HomePage = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchResources();
-  }, [category]);
+    const timeoutId = setTimeout(() => {
+      fetchResources(search, category);
+    }, 250);
 
-  const fetchResources = async () => {
+    return () => clearTimeout(timeoutId);
+  }, [category, search]);
+
+  const fetchResources = async (searchText = '', selectedCategory = 'Todos') => {
     try {
-      const params = category !== 'Todos' ? { category } : {};
+      setLoading(true);
+      const params = {};
+      if (selectedCategory !== 'Todos') {
+        params.category = selectedCategory;
+      }
+      if (searchText && searchText.trim()) {
+        params.search = searchText.trim();
+      }
       const res = await api.get('/resources', { params });
       setResources(res.data);
     } catch (err) {
@@ -166,16 +177,7 @@ const HomePage = () => {
 
   const handleSearch = async (e) => {
     e.preventDefault();
-    if (!search.trim()) {
-      fetchResources();
-      return;
-    }
-    try {
-      const res = await api.get('/resources', { params: { search } });
-      setResources(res.data);
-    } catch (err) {
-      console.error(err);
-    }
+    fetchResources(search, category);
   };
 
   return (

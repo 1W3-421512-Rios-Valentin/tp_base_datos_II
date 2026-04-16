@@ -61,10 +61,18 @@ router.post('/', auth, upload.single('file'), async (req, res) => {
 router.get('/', async (req, res) => {
   try {
     const { category, search, page = 1, limit = 20 } = req.query;
-    const query = {};
+    const query = { isPublished: true };
     if (category) query.category = category;
-    if (search) query.$text = { $search: search };
-    query.isPublished = true;
+    if (search && search.trim()) {
+      const safeSearch = search.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const searchRegex = new RegExp(safeSearch, 'i');
+      query.$or = [
+        { title: searchRegex },
+        { description: searchRegex },
+        { tags: searchRegex },
+        { category: searchRegex }
+      ];
+    }
     const resources = await Resource.find(query)
       .select('-fileData')
       .populate('user', 'username avatar')

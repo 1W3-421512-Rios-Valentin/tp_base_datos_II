@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { useAuth } from '../context/AuthContext';
-import { FiHome, FiPlusSquare, FiUser, FiLogOut, FiFolder, FiMenu, FiX } from 'react-icons/fi';
+import { FiHome, FiPlusSquare, FiUser, FiLogOut, FiFolder, FiMenu, FiX, FiCpu } from 'react-icons/fi';
 import { useState } from 'react';
 import Image from 'next/image';
 
@@ -52,7 +52,7 @@ export default function Layout({ children }) {
                 <FiHome className="w-5 h-5" />
                 <span className="text-sm font-medium">Inicio</span>
               </Link>
-              
+
               <Link 
                 href="/tree" 
                 className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-blue-50 text-secondary transition-colors"
@@ -60,6 +60,16 @@ export default function Layout({ children }) {
                 <FiFolder className="w-5 h-5" />
                 <span className="text-sm font-medium">Mis favs</span>
               </Link>
+
+              {user ? (
+                <Link 
+                  href="/ai" 
+                  className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-blue-50 text-secondary transition-colors"
+                >
+                  <FiCpu className="w-5 h-5" />
+                  <span className="text-sm font-medium">Recomendación IA</span>
+                </Link>
+              ) : null}
 
               {user ? (
                 <>
@@ -152,6 +162,17 @@ export default function Layout({ children }) {
                 <FiFolder className="w-5 h-5" />
                 <span>Mis favs</span>
               </Link>
+
+              {user ? (
+                <Link 
+                  href="/ai" 
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-blue-50 text-secondary w-full"
+                >
+                  <FiCpu className="w-5 h-5" />
+                  <span>Recomendación IA</span>
+                </Link>
+              ) : null}
 
               {user ? (
                 <>

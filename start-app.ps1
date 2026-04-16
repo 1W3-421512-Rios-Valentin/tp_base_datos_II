@@ -5,7 +5,10 @@ function Start-App {
     return $proc
 }
 
-Start-App -Name "Backend" -Cmd "node server.js" -Dir "C:\data\studytree-app"
+$appDir = $PSScriptRoot
+$frontendDir = Join-Path $appDir "frontend"
+
+Start-App -Name "Backend" -Cmd "node server.js" -Dir $appDir
 Start-Sleep -Seconds 3
-Start-App -Name "Frontend" -Cmd "npm run dev" -Dir "C:\data\studytree-app\frontend"
+Start-App -Name "Frontend" -Cmd "npm run dev" -Dir $frontendDir
 Start-Sleep -Seconds 3
