@@ -325,7 +325,7 @@ export default function ExamAISimulator({ initialResources = [] }) {
           className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-primary text-white font-medium hover:bg-green-700 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
         >
           <FiPlay className="w-4 h-4" />
-          {isAnalyzing ? 'Analizando...' : 'Simular análisis'}
+          {isAnalyzing ? 'Analizando...' : 'Realizar análisis'}
         </button>
       </div>
 
