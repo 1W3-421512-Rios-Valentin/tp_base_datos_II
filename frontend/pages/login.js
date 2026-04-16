@@ -23,9 +23,14 @@ export default function Login() {
 
   return (
     <Layout>
-      <div className="max-w-md mx-auto">
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8">
-          <h1 className="text-2xl font-bold text-gray-900 mb-6">Bienvenido de vuelta</h1>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="max-w-md mx-auto w-full">
+        <div className="card border border-gray-100">
+          <div className="mb-6">
+            <span className="badge-success">Acceso seguro</span>
+          </div>
+          <h1 className="title text-2xl mb-2">Bienvenido de vuelta</h1>
+          <p className="text-muted mb-6">Inicia sesión para continuar con tu comunidad de estudio.</p>
           
           {error && (
             <div className="mb-4 p-3 bg-red-50 text-red-600 rounded-lg text-sm">
@@ -42,7 +47,7 @@ export default function Login() {
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                 required
               />
             </div>
@@ -55,25 +60,26 @@ export default function Login() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                 required
               />
             </div>
             
             <button
               type="submit"
-              className="w-full py-3 bg-primary text-white rounded-lg font-medium hover:bg-indigo-600 transition-all"
+              className="button-primary w-full py-4 font-medium"
             >
               Iniciar sesión
             </button>
           </form>
           
-          <p className="mt-6 text-center text-sm text-gray-500">
+          <p className="mt-6 text-center text-sm text-muted">
             ¿No tienes cuenta?{' '}
-            <Link href="/register" className="text-primary font-medium">
+            <Link href="/register" className="text-primary font-semibold hover:text-green-700">
               Regístrate
             </Link>
           </p>
+        </div>
         </div>
       </div>
     </Layout>

@@ -67,8 +67,8 @@ export default function Upload() {
   if (!user) {
     return (
       <Layout>
-        <div className="text-center py-12">
-          <p className="text-gray-500">Debes iniciar sesión para subir archivos.</p>
+        <div className="max-w-xl mx-auto card text-center py-12 border border-gray-100">
+          <p className="text-muted">Debes iniciar sesión para subir archivos.</p>
         </div>
       </Layout>
     );
@@ -77,7 +77,11 @@ export default function Upload() {
   return (
     <Layout>
       <div className="max-w-2xl mx-auto">
-        <h1 className="text-2xl font-bold text-gray-900 mb-6">Subir material</h1>
+        <div className="mb-6">
+          <span className="badge-success">Publicación de recursos</span>
+        </div>
+        <h1 className="title text-3xl mb-2">Subir material</h1>
+        <p className="text-muted mb-6">Comparte apuntes y recursos con toda la comunidad.</p>
         
         {error && (
           <div className="mb-4 p-3 bg-red-50 text-red-600 rounded-lg text-sm">
@@ -85,7 +89,7 @@ export default function Upload() {
           </div>
         )}
         
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6 card border border-gray-100">
           <div
             {...getRootProps()}
             className={`dropzone ${isDragActive ? 'active' : ''}`}
@@ -124,7 +128,7 @@ export default function Upload() {
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               required
             />
           </div>
@@ -137,7 +141,7 @@ export default function Upload() {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
-              className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
             />
           </div>
           
@@ -148,7 +152,7 @@ export default function Upload() {
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               required
             >
               <option value="">Selecciona una categoría</option>
@@ -167,14 +171,14 @@ export default function Upload() {
               value={tags}
               onChange={(e) => setTags(e.target.value)}
               placeholder="integral, derivadas, examen final"
-              className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
             />
           </div>
           
           <button
             type="submit"
             disabled={uploading || !file}
-            className="w-full py-3 bg-primary text-white rounded-lg font-medium hover:bg-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+            className="button-primary w-full py-3 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {uploading ? 'Subiendo...' : 'Publicar'}
           </button>

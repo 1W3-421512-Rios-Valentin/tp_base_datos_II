@@ -77,7 +77,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', auth, async (req, res) => {
   try {
     const resource = await Resource.findByIdAndUpdate(
       req.params.id,
@@ -97,8 +97,9 @@ router.get('/:id/file', async (req, res) => {
     if (!resource || !resource.fileData) {
       return res.status(404).json({ message: 'Archivo no encontrado' });
     }
-    res.set('Content-Type', resource.fileType || 'application/octet-stream');
-    res.set('Content-Disposition', `attachment; filename="${resource.fileName}"`);
+    res.setHeader('Content-Type', resource.fileType || 'application/octet-stream');
+    res.setHeader('Content-Disposition', `attachment; filename="${encodeURIComponent(resource.fileName)}"`);
+    res.setHeader('Content-Length', resource.fileData.length);
     res.send(resource.fileData);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -141,10 +142,31 @@ router.post('/:id/comment', auth, async (req, res) => {
 
 router.get('/:id/comments', async (req, res) => {
   try {
-    const comments = await Comment.find({ resource: req.params.id })
+    const comments = await Comment.find({ resource: req.params.id, parentComment: null })
       .populate('user', 'username avatar')
+      .populate({
+        path: 'replies',
+        select: '_id user text createdAt',
+        populate: { path: 'user', select: 'username avatar' }
+      })
       .sort({ createdAt: -1 });
     res.json(comments);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+router.post('/:id/comments/:commentId/reply', auth, async (req, res) => {
+  try {
+    const { text } = req.body;
+    const reply = new Comment({
+      resource: req.params.id,
+      user: req.user._id,
+      text,
+      parentComment: req.params.commentId
+    });
+    await reply.save();
+    res.status(201).json(reply);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

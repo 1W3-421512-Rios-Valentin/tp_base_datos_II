@@ -3,6 +3,14 @@ const User = require('../models/User');
 const Resource = require('../models/Resource');
 const auth = require('../middleware/auth');
 const router = express.Router();
+const fs = require('fs');
+const path = require('path');
+
+// Crear directorio uploads si no existe
+const uploadsDir = path.join(__dirname, '../uploads');
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
 
 router.get('/:id', async (req, res) => {
   try {
@@ -61,8 +69,59 @@ router.post('/:id/follow', auth, async (req, res) => {
   }
 });
 
-router.put('/profile', auth, async (req, res) => {
+router.post('/upload', auth, async (req, res) => {
   try {
+    const { avatar } = req.body;
+    
+    if (!avatar) {
+      return res.status(400).json({ message: 'Avatar requerido' });
+    }
+
+    // Convertir base64 a buffer
+    const matches = avatar.match(/^data:image\/(\w+);base64,(.*)$/);
+    if (!matches) {
+      return res.status(400).json({ message: 'Formato de imagen inválido' });
+    }
+
+    const [, ext, data] = matches;
+    const buffer = Buffer.from(data, 'base64');
+    const filename = `avatar-${req.user._id}-${Date.now()}.${ext}`;
+    const filepath = path.join(uploadsDir, filename);
+
+    // Guardar archivo en disco
+    fs.writeFileSync(filepath, buffer);
+
+    // URL relativa para acceder al archivo
+    const avatarUrl = `/uploads/${filename}`;
+    
+    // Eliminar avatar anterior si existe
+    if (req.user.avatar && req.user.avatar.startsWith('/uploads/')) {
+      const oldFilepath = path.join(__dirname, '..', req.user.avatar);
+      try {
+        fs.unlinkSync(oldFilepath);
+      } catch (e) {
+        // Ignorar error si el archivo no existe
+      }
+    }
+
+    req.user.avatar = avatarUrl;
+    await req.user.save();
+    
+    res.json({ 
+      url: avatarUrl,
+      message: 'Avatar guardado correctamente'
+    });
+  } catch (err) {
+    console.error('Upload error:', err);
+    res.status(500).json({ message: 'Error al guardar avatar: ' + err.message });
+  }
+});
+
+router.put('/:id/profile', auth, async (req, res) => {
+  try {
+    if (req.params.id !== req.user._id.toString()) {
+      return res.status(403).json({ message: 'No autorizado' });
+    }
     const { username, bio, avatar } = req.body;
     if (username) {
       const existing = await User.findOne({ username });
@@ -71,11 +130,11 @@ router.put('/profile', auth, async (req, res) => {
       }
       req.user.username = username;
     }
-    if (bio) req.user.bio = bio;
-    if (avatar) req.user.avatar = avatar;
+    if (bio !== undefined) req.user.bio = bio;
+    if (avatar !== undefined) req.user.avatar = avatar;
     
     await req.user.save();
-    res.json(req.user);
+    res.json({ user: req.user.toObject() });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

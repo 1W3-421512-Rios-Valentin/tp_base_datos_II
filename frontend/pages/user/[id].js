@@ -4,7 +4,8 @@ import api from '../../lib/api';
 import Layout from '../../components/Layout';
 import ResourceCard from '../../components/ResourceCard';
 import { useAuth } from '../../context/AuthContext';
-import { FiUserPlus, FiUserCheck, FiFile } from 'react-icons/fi';
+import { FiUserPlus, FiUserCheck, FiFile, FiEdit3 } from 'react-icons/fi';
+import Link from 'next/link';
 
 export default function UserProfile() {
   const router = useRouter();
@@ -76,70 +77,121 @@ export default function UserProfile() {
 
   return (
     <Layout>
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <div className="flex items-start justify-between">
-          <div className="flex items-center space-x-4">
-            <div className="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center">
+      {/* Profile Header */}
+      <div className="bg-gradient-to-br from-green-50 to-blue-50 rounded-2xl shadow-sm border border-gray-100 p-8 mb-8">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+          <div className="flex items-center gap-6">
+            {/* Avatar */}
+            <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-white border-4 border-primary shadow-lg flex items-center justify-center overflow-hidden flex-shrink-0">
               {profile.avatar ? (
-                <img src={profile.avatar} alt={profile.username} className="w-20 h-20 rounded-full object-cover" />
+                <img
+                  src={profile.avatar}
+                  alt={profile.username}
+                  className="w-full h-full object-cover"
+                />
               ) : (
-                <span className="text-2xl font-bold text-gray-500">
+                <span className="text-4xl sm:text-5xl font-bold text-primary">
                   {profile.username.charAt(0).toUpperCase()}
                 </span>
               )}
             </div>
+
+            {/* Info */}
             <div>
-              <h1 className="text-xl font-bold text-gray-900">@{profile.username}</h1>
-              {profile.bio && <p className="text-gray-500 mt-1">{profile.bio}</p>}
-              <div className="flex items-center space-x-4 mt-3 text-sm">
-                <div>
-                  <span className="font-semibold">{resources.length}</span>
-                  <span className="text-gray-500 ml-1">apuntes</span>
-                </div>
-                <div>
-                  <span className="font-semibold">{followersCount}</span>
-                  <span className="text-gray-500 ml-1">seguidores</span>
-                </div>
-                <div>
-                  <span className="font-semibold">{followingCount}</span>
-                  <span className="text-gray-500 ml-1">siguiendo</span>
-                </div>
-              </div>
+              <h1 className="title text-2xl sm:text-3xl">
+                @{profile.username}
+              </h1>
+              {profile.bio && (
+                <p className="text-muted mt-2 text-sm sm:text-base">{profile.bio}</p>
+              )}
+              <p className="text-xs text-gray-400 mt-2">
+                Unido desde {new Date(profile.createdAt).toLocaleDateString()}
+              </p>
             </div>
           </div>
-          
-          {!isOwnProfile && currentUser && (
-            <button
-              onClick={handleFollow}
-              className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium ${
-                isFollowing
-                  ? 'border border-gray-300 text-gray-700'
-                  : 'bg-primary text-white hover:bg-indigo-600'
-              }`}
-            >
-              {isFollowing ? (
-                <>
-                  <FiUserCheck />
-                  <span>Siguiendo</span>
-                </>
-              ) : (
-                <>
-                  <FiUserPlus />
-                  <span>Seguir</span>
-                </>
-              )}
-            </button>
-          )}
+
+          {/* Stats & Actions */}
+          <div className="w-full sm:w-auto flex flex-col gap-3">
+            {/* Stats */}
+            <div className="grid grid-cols-3 gap-3 text-center sm:text-right">
+              <div>
+                <div className="text-xl sm:text-2xl font-bold text-primary">
+                  {resources.length}
+                </div>
+                <div className="text-xs text-gray-600">Apuntes</div>
+              </div>
+              <div>
+                <div className="text-xl sm:text-2xl font-bold text-primary">
+                  {followersCount}
+                </div>
+                <div className="text-xs text-gray-600">Seguidores</div>
+              </div>
+              <div>
+                <div className="text-xl sm:text-2xl font-bold text-primary">
+                  {followingCount}
+                </div>
+                <div className="text-xs text-gray-600">Siguiendo</div>
+              </div>
+            </div>
+
+            {/* Buttons */}
+            {isOwnProfile ? (
+              <Link
+                href="/edit-profile"
+                className="button-primary flex items-center justify-center gap-2 w-full px-4 py-2 rounded-lg font-medium transition-all"
+              >
+                <FiEdit3 className="w-4 h-4" />
+                Editar perfil
+              </Link>
+            ) : currentUser ? (
+              <button
+                onClick={handleFollow}
+                className={`flex items-center justify-center gap-2 w-full px-4 py-2 rounded-lg font-medium transition-all ${
+                  isFollowing
+                    ? 'border-2 border-primary text-primary hover:bg-green-50'
+                    : 'button-primary text-white'
+                }`}
+              >
+                {isFollowing ? (
+                  <>
+                    <FiUserCheck className="w-4 h-4" />
+                    <span>Siguiendo</span>
+                  </>
+                ) : (
+                  <>
+                    <FiUserPlus className="w-4 h-4" />
+                    <span>Seguir</span>
+                  </>
+                )}
+              </button>
+            ) : null}
+          </div>
         </div>
       </div>
 
-      <div className="mt-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Material subido</h2>
-        
+      {/* Resources Section */}
+      <div>
+        <h2 className="title text-2xl mb-6">
+          Material académico
+        </h2>
+
         {resources.length === 0 ? (
           <div className="text-center py-12 bg-white rounded-xl border border-gray-100">
             <FiFile className="w-12 h-12 mx-auto text-gray-300" />
-            <p className="text-gray-500 mt-3">Este usuario no ha subido material todavía.</p>
+            <p className="text-gray-500 mt-3">
+              {isOwnProfile
+                ? 'Aún no has subido material.'
+                : 'Este usuario no ha subido material todavía.'}
+            </p>
+            {isOwnProfile && (
+              <Link
+                href="/upload"
+                className="button-primary mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium"
+              >
+                <FiFile className="w-4 h-4" />
+                Subir material
+              </Link>
+            )}
           </div>
         ) : (
           <div className="grid gap-4">

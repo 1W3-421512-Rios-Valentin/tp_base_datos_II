@@ -9,4 +9,15 @@ const commentSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
+// Virtual para obtener las respuestas de un comentario
+commentSchema.virtual('replies', {
+  ref: 'Comment',
+  localField: '_id',
+  foreignField: 'parentComment'
+});
+
+// Incluir virtuals al convertir a JSON
+commentSchema.set('toJSON', { virtuals: true });
+commentSchema.set('toObject', { virtuals: true });
+
 module.exports = mongoose.model('Comment', commentSchema);

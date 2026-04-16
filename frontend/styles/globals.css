@@ -3,12 +3,12 @@
 @tailwind utilities;
 
 :root {
-  --primary: #4F46E5;
-  --secondary: #10B981;
+  --primary: #4CAF50;
+  --secondary: #3A6EA5;
 }
 
 body {
-  background-color: #f8fafc;
+  background-color: #F4F7FA;
 }
 
 .card-hover {
@@ -29,7 +29,7 @@ body {
 }
 
 .dropzone:hover, .dropzone.active {
-  @apply border-primary bg-indigo-50;
+  @apply border-primary bg-green-50;
 }
 
 .tree-line {

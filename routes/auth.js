@@ -1,6 +1,7 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const auth = require('../middleware/auth');
 const router = express.Router();
 
 router.post('/register', async (req, res) => {
@@ -14,7 +15,16 @@ router.post('/register', async (req, res) => {
     const user = new User({ username, email, password });
     await user.save();
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
-    res.status(201).json({ token, user: { id: user._id, username, email, avatar: user.avatar } });
+    res.status(201).json({ 
+      token, 
+      user: { 
+        id: user._id.toString(), 
+        username, 
+        email, 
+        avatar: user.avatar,
+        bio: user.bio
+      } 
+    });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -28,18 +38,26 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ message: 'Credenciales inválidas' });
     }
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
-    res.json({ token, user: { id: user._id, username: user.username, email: user.email, avatar: user.avatar } });
+    res.json({ 
+      token, 
+      user: { 
+        id: user._id.toString(), 
+        username: user.username, 
+        email: user.email, 
+        avatar: user.avatar,
+        bio: user.bio
+      } 
+    });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
 
-router.get('/me', async (req, res) => {
+router.get('/me', auth, async (req, res) => {
   try {
-    const token = req.headers.authorization?.split(' ')[1];
-    if (!token) return res.status(401).json({ message: 'No autorizado' });
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(decoded.id).select('-password');
+    const user = req.user.toObject();
+    user.id = user._id.toString();
+    delete user.password;
     res.json(user);
   } catch (err) {
     res.status(401).json({ message: 'Token inválido' });
