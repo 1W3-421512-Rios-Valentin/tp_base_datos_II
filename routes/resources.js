@@ -1,6 +1,8 @@
 const express = require('express');
 const multer = require('multer');
 const mongoose = require('mongoose');
+const fs = require('fs');
+const path = require('path');
 const Resource = require('../models/Resource');
 const Comment = require('../models/Comment');
 const auth = require('../middleware/auth');
@@ -8,6 +10,17 @@ const router = express.Router();
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
+
+const saveResourceFileToDisk = async (resource, fileBuffer, originalName) => {
+  const resourceDir = path.join(__dirname, '..', 'uploads', 'resources', String(resource._id));
+  await fs.promises.mkdir(resourceDir, { recursive: true });
+  const safeFileName = (originalName || resource.fileName || 'archivo').replace(/[\\/]/g, '_');
+  const diskFilePath = path.join(resourceDir, safeFileName);
+  await fs.promises.writeFile(diskFilePath, fileBuffer);
+  resource.filePath = path.relative(path.join(__dirname, '..'), diskFilePath).replace(/\\/g, '/');
+  await resource.save();
+  return diskFilePath;
+};
 
 router.get('/liked', auth, async (req, res) => {
   try {
@@ -51,6 +64,8 @@ router.post('/', auth, upload.single('file'), async (req, res) => {
       tags: tags ? tags.split(',').map(t => t.trim()) : []
     });
     await resource.save();
+    await saveResourceFileToDisk(resource, req.file.buffer, req.file.originalname);
+
     res.status(201).json(resource);
   } catch (err) {
     console.error('Error upload:', err);
@@ -102,13 +117,28 @@ router.get('/:id', auth, async (req, res) => {
 router.get('/:id/file', async (req, res) => {
   try {
     const resource = await Resource.findById(req.params.id);
-    if (!resource || !resource.fileData) {
+    if (!resource) {
       return res.status(404).json({ message: 'Archivo no encontrado' });
     }
+
+    if (resource.filePath) {
+      const absoluteFilePath = path.join(__dirname, '..', resource.filePath);
+      if (fs.existsSync(absoluteFilePath)) {
+        res.setHeader('Content-Type', resource.fileType || 'application/octet-stream');
+        res.setHeader('Content-Disposition', `inline; filename="${encodeURIComponent(resource.fileName)}"`);
+        return res.sendFile(absoluteFilePath);
+      }
+    }
+
+    if (!resource.fileData) {
+      return res.status(404).json({ message: 'Archivo no encontrado' });
+    }
+
+    const diskFilePath = await saveResourceFileToDisk(resource, resource.fileData, resource.fileName);
     res.setHeader('Content-Type', resource.fileType || 'application/octet-stream');
-    res.setHeader('Content-Disposition', `attachment; filename="${encodeURIComponent(resource.fileName)}"`);
-    res.setHeader('Content-Length', resource.fileData.length);
-    res.send(resource.fileData);
+    res.setHeader('Content-Disposition', `inline; filename="${encodeURIComponent(resource.fileName)}"`);
+    return res.sendFile(diskFilePath);
+
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

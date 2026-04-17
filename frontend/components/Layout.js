@@ -16,7 +16,7 @@ export default function Layout({ children }) {
   return (
     <div className="min-h-screen">
       {/* Navigation */}
-      <nav className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-[0_10px_25px_rgba(0,0,0,0.08)]">
+      <nav className="bg-white border-b border-gray-200 sticky top-0 z-40 shadow-[0_10px_25px_rgba(0,0,0,0.08)]">
         <div className="max-w-6xl mx-auto px-4">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}

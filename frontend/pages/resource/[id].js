@@ -1,17 +1,26 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
+import { createPortal } from 'react-dom';
 import api from '../../lib/api';
 import Layout from '../../components/Layout';
 import { useAuth } from '../../context/AuthContext';
 import { FiHeart, FiEye, FiMessageCircle, FiDownload, FiArrowLeft, FiX, FiCornerDownRight } from 'react-icons/fi';
 import Link from 'next/link';
+import { buildPdfPreviewCopy } from '../../lib/pdfPreviewCopy';
 
 // Importar react-pdf dinámicamente solo en el cliente
 const PDFViewer = dynamic(() => import('../../components/PDFViewer'), {
   ssr: false,
-  loading: () => <div className="text-gray-500">Cargando PDF...</div>
+  loading: () => null
 });
+
+const getAvatarUrl = (avatar) => {
+  if (!avatar) return '';
+  return avatar.startsWith('/uploads/') ? `http://localhost:5000${avatar}` : avatar;
+};
+
+const getUserInitial = (username) => (username?.charAt(0) || '?').toUpperCase();
 
 export default function ResourceDetail() {
   const router = useRouter();
@@ -30,25 +39,68 @@ export default function ResourceDetail() {
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
   const [pdfBlob, setPdfBlob] = useState(null);
+  const [pdfLoadError, setPdfLoadError] = useState(false);
 
   // Cargar PDF cuando el recurso esté disponible
   useEffect(() => {
     if (resource && resource.fileType === 'application/pdf') {
+      setPdfLoadError(false);
+      setPdfBlob(null);
+
+      if (resource.filePath) {
+        const localUrl = resource.filePath.startsWith('http')
+          ? resource.filePath
+          : `http://localhost:5000/${resource.filePath.replace(/^\//, '')}`;
+        setPdfBlob(localUrl);
+        return;
+      }
+
+      let cancelled = false;
+      const timeoutId = setTimeout(() => {
+        if (!cancelled) {
+          setPdfLoadError(true);
+        }
+      }, 10000);
+
       const loadPdf = async () => {
         try {
-          const response = await fetch(`http://localhost:5000/api/resources/${id}/file`);
-          if (response.ok) {
+          const token = localStorage.getItem('token');
+          const response = await fetch(`http://localhost:5000/api/resources/${id}/file`, {
+            headers: token ? { Authorization: `Bearer ${token}` } : {}
+          });
+          if (!response.ok) {
+            throw new Error(`PDF fetch failed: ${response.status}`);
+          }
+          if (!cancelled) {
             const blob = await response.blob();
             const blobUrl = URL.createObjectURL(blob);
             setPdfBlob(blobUrl);
           }
         } catch (err) {
           console.error('Error loading PDF:', err);
+          if (!cancelled) {
+            setPdfLoadError(true);
+          }
+        } finally {
+          clearTimeout(timeoutId);
         }
       };
       loadPdf();
+
+      return () => {
+        cancelled = true;
+        clearTimeout(timeoutId);
+      };
     }
   }, [resource, id]);
+
+  useEffect(() => {
+    return () => {
+      if (pdfBlob && pdfBlob.startsWith('blob:')) {
+        URL.revokeObjectURL(pdfBlob);
+      }
+    };
+  }, [pdfBlob]);
 
   useEffect(() => {
     if (id && !hasViewed) {
@@ -158,6 +210,13 @@ export default function ResourceDetail() {
     );
   }
 
+  const previewCopy = buildPdfPreviewCopy({
+    title: resource.title,
+    fileName: resource.fileName,
+    category: resource.category,
+    description: resource.description
+  });
+
   return (
     <Layout>
       <Link href="/" className="inline-flex items-center text-muted hover:text-secondary mb-4">
@@ -183,16 +242,35 @@ export default function ResourceDetail() {
         {/* Preview del documento */}
         <div className="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
           <p className="text-sm font-medium text-gray-700 mb-3">Previsualización del documento</p>
-          {resource.fileType === 'application/pdf' && pdfBlob ? (
-            <PDFViewer 
-              fileUrl={pdfBlob}
-              fileName={resource.fileName}
-              onLoadSuccess={({ numPages }) => setNumPages(numPages)}
-              numPages={numPages}
-            />
-          ) : resource.fileType === 'application/pdf' && !pdfBlob ? (
-            <div className="bg-white rounded border border-gray-300 p-4 h-64 overflow-y-auto flex items-center justify-center">
-              <div className="text-gray-500 text-sm">Cargando PDF...</div>
+          {resource.fileType === 'application/pdf' ? (
+            <div className="space-y-3">
+              <div className="bg-white rounded border border-gray-300 px-4 py-3 flex items-center justify-between gap-3 flex-wrap">
+                <div>
+                  <p className="text-xs uppercase tracking-wide text-gray-400">{previewCopy.label}</p>
+                  <p className="text-sm font-semibold text-gray-800">{previewCopy.title}</p>
+                  <p className="text-xs text-gray-500">{previewCopy.intro}</p>
+                </div>
+                <button
+                  onClick={downloadFile}
+                  className="text-xs text-primary hover:text-green-700 font-medium px-3 py-2 bg-green-50 rounded"
+                >
+                  Descargar
+                </button>
+              </div>
+
+              {pdfBlob ? (
+                <PDFViewer 
+                  fileUrl={pdfBlob}
+                  fileName={resource.fileName}
+                  documentTitle={resource.title}
+                  onLoadSuccess={({ numPages }) => setNumPages(numPages)}
+                  numPages={numPages}
+                />
+              ) : pdfLoadError ? (
+                <div className="bg-white rounded border border-amber-200 px-4 py-3 text-sm text-amber-800">
+                  No se pudo mostrar el PDF.
+                </div>
+              ) : null}
             </div>
           ) : (
             <div className="bg-white rounded border border-gray-300 p-4 h-64 overflow-y-auto flex items-center justify-center">
@@ -238,8 +316,8 @@ export default function ResourceDetail() {
       </div>
 
       {/* Modal de comentarios */}
-      {showCommentsModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+      {showCommentsModal && typeof window !== 'undefined' && createPortal(
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-[9999] flex items-center justify-center p-4">
           <div className="bg-white rounded-lg shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col">
             {/* Header */}
             <div className="flex items-center justify-between p-6 border-b border-gray-200">
@@ -266,7 +344,18 @@ export default function ResourceDetail() {
                     {/* Comentario principal */}
                     <div>
                       <div className="flex items-center space-x-2">
-                        <span className="font-medium text-gray-900">@{comment.user?.username}</span>
+                        {getAvatarUrl(comment.user?.avatar) ? (
+                          <img
+                            src={getAvatarUrl(comment.user?.avatar)}
+                            alt={comment.user?.username || 'Usuario'}
+                            className="w-7 h-7 rounded-full object-cover"
+                          />
+                        ) : (
+                          <div className="w-7 h-7 rounded-full bg-primary text-white flex items-center justify-center text-xs font-bold">
+                            {getUserInitial(comment.user?.username)}
+                          </div>
+                        )}
+                        <span className="font-medium text-gray-900">@{comment.user?.username || 'usuario'}</span>
                         <span className="text-xs text-gray-400">
                           {new Date(comment.createdAt).toLocaleDateString()}
                         </span>
@@ -289,7 +378,18 @@ export default function ResourceDetail() {
                         {comment.replies.map((reply) => (
                           <div key={reply._id} className="text-sm">
                             <div className="flex items-center space-x-2">
-                              <span className="font-medium text-gray-900">@{reply.user?.username}</span>
+                              {getAvatarUrl(reply.user?.avatar) ? (
+                                <img
+                                  src={getAvatarUrl(reply.user?.avatar)}
+                                  alt={reply.user?.username || 'Usuario'}
+                                  className="w-6 h-6 rounded-full object-cover"
+                                />
+                              ) : (
+                                <div className="w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center text-[10px] font-bold">
+                                  {getUserInitial(reply.user?.username)}
+                                </div>
+                              )}
+                              <span className="font-medium text-gray-900">@{reply.user?.username || 'usuario'}</span>
                               <span className="text-xs text-gray-400">
                                 {new Date(reply.createdAt).toLocaleDateString()}
                               </span>
@@ -351,7 +451,8 @@ export default function ResourceDetail() {
               </div>
             )}
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </Layout>
   );

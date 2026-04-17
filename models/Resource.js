@@ -5,6 +5,7 @@ const resourceSchema = new mongoose.Schema({
   title: { type: String, required: true },
   description: { type: String, default: '' },
   fileData: { type: Buffer, default: null },
+  filePath: { type: String, default: '' },
   fileType: { type: String, required: true },
   fileName: { type: String, required: true },
   category: { type: String, required: true },
