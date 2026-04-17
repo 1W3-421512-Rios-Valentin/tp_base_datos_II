@@ -6,3 +6,4 @@ node_modules/
 *.ico
 *.png
 *.jpg
+uploads/avatar-*.jpeg
