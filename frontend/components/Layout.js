@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { useAuth } from '../context/AuthContext';
-import { FiHome, FiPlusSquare, FiUser, FiLogOut, FiFolder, FiMenu, FiX, FiCpu } from 'react-icons/fi';
+import { FiHome, FiPlusSquare, FiUser, FiLogOut, FiFolder, FiMenu, FiX, FiCpu, FiHeart, FiMessageCircle } from 'react-icons/fi';
 import { useState } from 'react';
 import Image from 'next/image';
 
@@ -29,7 +29,6 @@ export default function Layout({ children }) {
                   height={48}
                   className="w-12 h-12 object-contain"
                   onError={(e) => {
-                    // Fallback si la imagen no existe
                     e.target.style.display = 'none';
                     e.target.nextElementSibling.style.display = 'flex';
                   }}
@@ -45,16 +44,16 @@ export default function Layout({ children }) {
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-2">
-              <Link 
-                href="/" 
+              <Link
+                href="/"
                 className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-blue-50 text-secondary transition-colors"
               >
                 <FiHome className="w-5 h-5" />
                 <span className="text-sm font-medium">Inicio</span>
               </Link>
 
-              <Link 
-                href="/tree" 
+              <Link
+                href="/tree"
                 className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-blue-50 text-secondary transition-colors"
               >
                 <FiFolder className="w-5 h-5" />
@@ -62,8 +61,8 @@ export default function Layout({ children }) {
               </Link>
 
               {user ? (
-                <Link 
-                  href="/ai" 
+                <Link
+                  href="/ai"
                   className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-blue-50 text-secondary transition-colors"
                 >
                   <FiCpu className="w-5 h-5" />
@@ -73,8 +72,32 @@ export default function Layout({ children }) {
 
               {user ? (
                 <>
-                  <Link 
-                    href="/upload" 
+                  <Link
+                    href="/study-match"
+                    className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-green-50 text-secondary transition-colors"
+                  >
+                    <FiHeart className="w-5 h-5 text-primary" />
+                    <span className="text-sm font-medium">Study Match</span>
+                  </Link>
+
+                  <Link
+                    href="/chats"
+                    className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-blue-50 text-secondary transition-colors"
+                  >
+                    <FiMessageCircle className="w-5 h-5" />
+                    <span className="text-sm font-medium hidden lg:inline">Chats</span>
+                  </Link>
+
+                  <Link
+                    href="/wallet"
+                    className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-yellow-50 text-secondary transition-colors"
+                  >
+                    <img src="/images/santoken.png.webp" alt="Wallet" className="w-5 h-5 rounded-full object-cover border border-yellow-300" />
+                    <span className="text-sm font-medium hidden lg:inline">Wallet</span>
+                  </Link>
+
+                  <Link
+                    href="/upload"
                     className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-blue-50 text-secondary transition-colors"
                   >
                     <FiPlusSquare className="w-5 h-5" />
@@ -83,7 +106,7 @@ export default function Layout({ children }) {
 
                   <div className="w-px h-6 bg-gray-200"></div>
 
-                  <Link 
+                  <Link
                     href={`/user/${user.id}`}
                     className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-green-50 text-primary transition-colors"
                   >
@@ -103,7 +126,7 @@ export default function Layout({ children }) {
                     </span>
                   </Link>
 
-                  <button 
+                  <button
                     onClick={handleLogout}
                     className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-red-50 text-red-600 transition-colors"
                   >
@@ -113,14 +136,14 @@ export default function Layout({ children }) {
                 </>
               ) : (
                 <div className="flex gap-2 items-center h-10">
-                  <Link 
-                    href="/login" 
+                  <Link
+                    href="/login"
                     className="px-4 py-0 h-full flex items-center text-primary font-medium hover:bg-green-50 rounded-lg transition-colors"
                   >
                     Login
                   </Link>
-                  <Link 
-                    href="/register" 
+                  <Link
+                    href="/register"
                     className="button-primary px-4 py-0 h-full flex items-center font-medium rounded-lg transition-colors"
                   >
                     Registrarse
@@ -130,7 +153,7 @@ export default function Layout({ children }) {
             </div>
 
             {/* Mobile Menu Button */}
-            <button 
+            <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="md:hidden p-2 rounded-lg hover:bg-blue-50"
             >
@@ -145,17 +168,17 @@ export default function Layout({ children }) {
           {/* Mobile Navigation */}
           {mobileMenuOpen && (
             <div className="md:hidden border-t border-gray-100 py-4 space-y-2">
-              <Link 
-                href="/" 
+              <Link
+                href="/"
                 onClick={() => setMobileMenuOpen(false)}
                 className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-blue-50 text-secondary w-full"
               >
                 <FiHome className="w-5 h-5" />
                 <span>Inicio</span>
               </Link>
-              
-              <Link 
-                href="/tree" 
+
+              <Link
+                href="/tree"
                 onClick={() => setMobileMenuOpen(false)}
                 className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-blue-50 text-secondary w-full"
               >
@@ -164,8 +187,8 @@ export default function Layout({ children }) {
               </Link>
 
               {user ? (
-                <Link 
-                  href="/ai" 
+                <Link
+                  href="/ai"
                   onClick={() => setMobileMenuOpen(false)}
                   className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-blue-50 text-secondary w-full"
                 >
@@ -176,8 +199,35 @@ export default function Layout({ children }) {
 
               {user ? (
                 <>
-                  <Link 
-                    href="/upload" 
+                  <Link
+                    href="/study-match"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-green-50 text-secondary w-full"
+                  >
+                    <FiHeart className="w-5 h-5 text-primary" />
+                    <span>Study Match</span>
+                  </Link>
+
+                  <Link
+                    href="/chats"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-blue-50 text-secondary w-full"
+                  >
+                    <FiMessageCircle className="w-5 h-5" />
+                    <span>Chats</span>
+                  </Link>
+
+                  <Link
+                    href="/wallet"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-yellow-50 text-secondary w-full"
+                  >
+                    <img src="/images/santoken.png.webp" alt="SanToken" className="w-5 h-5 rounded-full object-cover border border-yellow-300" />
+                    <span>Wallet SanTokens</span>
+                  </Link>
+
+                  <Link
+                    href="/upload"
                     onClick={() => setMobileMenuOpen(false)}
                     className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-blue-50 text-secondary w-full"
                   >
@@ -187,7 +237,7 @@ export default function Layout({ children }) {
 
                   <div className="h-px bg-gray-200 my-2"></div>
 
-                  <Link 
+                  <Link
                     href={`/user/${user.id}`}
                     onClick={() => setMobileMenuOpen(false)}
                     className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-green-50 text-primary w-full"
@@ -196,7 +246,7 @@ export default function Layout({ children }) {
                     <span>Mi perfil</span>
                   </Link>
 
-                  <button 
+                  <button
                     onClick={handleLogout}
                     className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-red-50 text-red-600 w-full"
                   >
@@ -206,15 +256,15 @@ export default function Layout({ children }) {
                 </>
               ) : (
                 <div className="flex gap-2 pt-2">
-                  <Link 
-                    href="/login" 
+                  <Link
+                    href="/login"
                     onClick={() => setMobileMenuOpen(false)}
                     className="flex-1 px-4 py-2 text-primary font-medium text-center hover:bg-green-50 rounded-lg"
                   >
                     Login
                   </Link>
-                  <Link 
-                    href="/register" 
+                  <Link
+                    href="/register"
                     onClick={() => setMobileMenuOpen(false)}
                     className="button-primary flex-1 px-4 py-2 font-medium text-center rounded-lg"
                   >

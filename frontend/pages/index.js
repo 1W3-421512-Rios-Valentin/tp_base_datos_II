@@ -14,10 +14,25 @@ import 'swiper/css/navigation';
 
 const CATEGORIES = ['Todos', 'Matemática', 'Física', 'Química', 'Biología', 'Programación', 'Economía', 'Otros'];
 
-const CAROUSEL_IMAGES = [
-  '/images/carousel/slide-1.png',
-  '/images/carousel/slide-2.png',
-  '/images/carousel/slide-3.png',
+const CAROUSEL_SLIDES = [
+  {
+    title: 'Compartí tus apuntes',
+    desc: 'Subí PDFs, presentaciones y ejercicios para que toda tu comunidad pueda aprender',
+    emoji: '📚',
+    bg: 'from-blue-500 to-indigo-600'
+  },
+  {
+    title: 'Encontrá compañeros de estudio',
+    desc: 'Hacé match con estudiantes que cursan las mismas materias y estudiá en equipo',
+    emoji: '🤝',
+    bg: 'from-green-500 to-emerald-600'
+  },
+  {
+    title: 'Ganá SanTokens',
+    desc: 'Cada match te da 10 SanTokens para canjear beneficios y descuentos exclusivos',
+    emoji: '🏆',
+    bg: 'from-yellow-500 to-orange-500'
+  }
 ];
 
 const LandingPage = () => {
@@ -55,24 +70,22 @@ const LandingPage = () => {
             </div>
 
             {/* Right Side - Carousel */}
-            <div className="relative carousel-item bg-gray-100">
+            <div className="relative rounded-2xl overflow-hidden shadow-2xl">
               <Swiper
-                modules={[Autoplay, EffectFade, Navigation, Pagination]}
+                modules={[Autoplay, EffectFade, Pagination]}
                 effect="fade"
                 autoplay={{ delay: 3000, disableOnInteraction: false }}
                 pagination={{ clickable: true }}
-                navigation={true}
                 loop={true}
-                autoHeight={true}
                 className="w-full"
               >
-                {CAROUSEL_IMAGES.map((imageSrc, index) => (
-                  <SwiperSlide key={imageSrc}>
-                    <img
-                      src={imageSrc}
-                      alt={`Slide ${index + 1}`}
-                      className="block w-full h-auto object-contain"
-                    />
+                {CAROUSEL_SLIDES.map((slide, index) => (
+                  <SwiperSlide key={index}>
+                    <div className={`bg-gradient-to-br ${slide.bg} p-12 flex flex-col items-center justify-center text-white text-center min-h-[320px]`}>
+                      <div className="text-8xl mb-6">{slide.emoji}</div>
+                      <h3 className="text-2xl font-bold mb-3">{slide.title}</h3>
+                      <p className="text-white/80 text-base leading-relaxed max-w-xs">{slide.desc}</p>
+                    </div>
                   </SwiperSlide>
                 ))}
               </Swiper>

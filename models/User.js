@@ -9,6 +9,15 @@ const userSchema = new mongoose.Schema({
   bio: { type: String, default: '' },
   followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+  // Perfil de estudio — usado por el sistema de matching
+  studyYear: { type: String, default: '' },
+  subjects: [{ type: String }],
+  languages: [{ type: String }],
+  location: {
+    lat: { type: Number, default: null },
+    lon: { type: Number, default: null }
+  },
+  santokenBalance: { type: Number, default: 0 },
   createdAt: { type: Date, default: Date.now }
 });
 

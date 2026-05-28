@@ -2,6 +2,7 @@ const express = require('express');
 const User = require('../models/User');
 const Resource = require('../models/Resource');
 const auth = require('../middleware/auth');
+const { syncUserToNeo4j } = require('../services/userSync');
 const router = express.Router();
 const fs = require('fs');
 const path = require('path');
@@ -122,7 +123,8 @@ router.put('/:id/profile', auth, async (req, res) => {
     if (req.params.id !== req.user._id.toString()) {
       return res.status(403).json({ message: 'No autorizado' });
     }
-    const { username, bio, avatar } = req.body;
+    const { username, bio, avatar, studyYear, subjects, languages, location } = req.body;
+
     if (username) {
       const existing = await User.findOne({ username });
       if (existing && existing._id.toString() !== req.user._id.toString()) {
@@ -132,8 +134,20 @@ router.put('/:id/profile', auth, async (req, res) => {
     }
     if (bio !== undefined) req.user.bio = bio;
     if (avatar !== undefined) req.user.avatar = avatar;
-    
+    if (studyYear !== undefined) req.user.studyYear = studyYear;
+    if (subjects !== undefined) req.user.subjects = subjects;
+    if (languages !== undefined) req.user.languages = languages;
+    if (location !== undefined) req.user.location = location;
+
     await req.user.save();
+
+    // Sincronizar perfil de estudio a Neo4j (solo si hay datos de matching)
+    if (studyYear !== undefined || subjects !== undefined || languages !== undefined || location !== undefined) {
+      await syncUserToNeo4j(req.user).catch(err =>
+        console.error('Neo4j sync error:', err.message)
+      );
+    }
+
     res.json({ user: req.user.toObject() });
   } catch (err) {
     res.status(500).json({ message: err.message });
