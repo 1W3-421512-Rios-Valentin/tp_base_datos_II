@@ -3,7 +3,7 @@ import api from '../lib/api';
 import { useAuth } from '../context/AuthContext';
 import Layout from '../components/Layout';
 import Link from 'next/link';
-import { FiHeart, FiUsers, FiMessageCircle } from 'react-icons/fi';
+import { FiHeart, FiUsers, FiMessageCircle, FiGift } from 'react-icons/fi';
 
 export default function Matches() {
   const { user } = useAuth();
@@ -38,9 +38,25 @@ export default function Matches() {
             </h1>
             <p className="text-sm" style={{color:'#4B5563'}}>{matches.length} compañeros de estudio encontrados</p>
           </div>
-          <Link href="/study-match" className="button-primary px-4 py-2 text-sm font-semibold">
-            Buscar más
-          </Link>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => {
+                const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+                const url = token ? `http://localhost:3001?token=${token}` : 'http://localhost:3001';
+                window.open(url, '_self');
+              }}
+              className="flex items-center gap-2 px-4 py-2 text-sm font-bold"
+              style={{background:'#fef9c3', border:'2px solid #1C293C', borderRadius:'8px', boxShadow:'3px 3px 0 #1C293C', color:'#1C293C', cursor:'pointer', transition:'all 0.12s ease'}}
+              onMouseEnter={e => {e.currentTarget.style.transform='translate(-1px,-1px)';e.currentTarget.style.boxShadow='4px 4px 0 #1C293C';}}
+              onMouseLeave={e => {e.currentTarget.style.transform='';e.currentTarget.style.boxShadow='3px 3px 0 #1C293C';}}
+            >
+              <FiGift />
+              Canjear beneficios
+            </button>
+            <Link href="/study-match" className="button-primary px-4 py-2 text-sm font-semibold">
+              Buscar más
+            </Link>
+          </div>
         </div>
 
         {loading ? (
