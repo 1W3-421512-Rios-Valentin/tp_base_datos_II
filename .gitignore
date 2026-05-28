@@ -6,4 +6,9 @@ node_modules/
 *.ico
 *.png
 *.jpg
+!frontend/public/**/*.png
+!frontend/public/**/*.jpg
+!frontend/public/**/*.webp
+!benefits-app/public/**/*.png
+!benefits-app/public/**/*.jpg
 uploads/avatar-*.jpeg
