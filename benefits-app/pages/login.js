@@ -1,97 +1,131 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from '../context/AuthContext';
-import { FiUser, FiLock } from 'react-icons/fi';
+import { FiUser, FiLock, FiArrowRight } from 'react-icons/fi';
 
 export default function LoginPage() {
-  const { login, user } = useAuth();
+  const { login, user, loading } = useAuth();
   const router = useRouter();
   const [form, setForm] = useState({ username: '', password: '' });
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
-  if (user) {
-    router.replace('/');
-    return null;
-  }
+  useEffect(() => {
+    if (!loading && user) router.replace('/');
+  }, [user, loading]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    setSubmitting(true);
     setError('');
     try {
       await login(form.username, form.password);
       router.push('/');
     } catch (err) {
-      setError(err.response?.data?.message || 'Credenciales incorrectas');
+      if (!err.response) {
+        setError('No se pudo conectar al servidor. Verifica que el backend este corriendo.');
+      } else {
+        setError(err.response?.data?.message || 'Credenciales incorrectas');
+      }
     } finally {
-      setLoading(false);
+      setSubmitting(false);
     }
   };
 
+  if (loading || user) return null;
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center p-4">
-      <div className="w-full max-w-sm">
-        {/* Logo */}
-        <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-gradient-to-br from-green-400 to-emerald-600 rounded-2xl flex items-center justify-center shadow-lg mx-auto mb-3">
-            <span className="text-3xl">🎁</span>
+    <div className="min-h-screen bg-secondary flex">
+
+      {/* Left panel — branding */}
+      <div className="hidden lg:flex lg:w-1/2 flex-col justify-between p-12 bg-secondary border-r border-white/10">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-xl font-black text-secondary">
+            🎁
           </div>
-          <h1 className="text-2xl font-bold text-gray-900">StudyBenefits</h1>
-          <p className="text-gray-500 text-sm mt-1">Ingresa con tu cuenta de StudyTree</p>
+          <span className="text-surface font-bold text-xl tracking-tight">StudyBenefits</span>
         </div>
 
-        {/* Card */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <div>
+          <h1 className="text-5xl font-black text-surface leading-tight mb-4">
+            Tus SanTokens,<br />
+            <span className="text-primary">tus beneficios.</span>
+          </h1>
+          <p className="text-white/50 text-lg leading-relaxed max-w-sm">
+            Gana tokens haciendo matches de estudio y canjealo por descuentos reales en cafes, librerias y mas.
+          </p>
+        </div>
+
+        <p className="text-white/20 text-sm">
+          Usa las mismas credenciales de StudyTree &mdash; no necesitas registrarte.
+        </p>
+      </div>
+
+      {/* Right panel — form */}
+      <div className="flex-1 flex flex-col items-center justify-center px-6 py-12 bg-gray-50">
+
+        {/* Mobile logo */}
+        <div className="lg:hidden mb-10 text-center">
+          <div className="w-14 h-14 bg-secondary rounded-2xl flex items-center justify-center text-2xl mx-auto mb-3 shadow-yellow">
+            🎁
+          </div>
+          <h2 className="text-2xl font-black text-secondary">StudyBenefits</h2>
+        </div>
+
+        <div className="w-full max-w-sm">
+          <h2 className="text-2xl font-bold text-text-main mb-1">Bienvenido</h2>
+          <p className="text-gray-400 text-sm mb-8">Ingresa con tu cuenta de StudyTree</p>
+
           <form onSubmit={handleSubmit} className="space-y-4">
+
+            {/* Username */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Usuario</label>
+              <label className="block text-sm font-semibold text-text-main mb-1.5">Usuario</label>
               <div className="relative">
-                <FiUser className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <FiUser className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4 pointer-events-none" />
                 <input
                   type="text"
                   value={form.username}
                   onChange={e => setForm(f => ({ ...f, username: e.target.value }))}
                   required
-                  className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-green-300 focus:border-green-400"
+                  autoComplete="username"
                   placeholder="tu usuario"
+                  className="input pl-10"
                 />
               </div>
             </div>
 
+            {/* Password */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Contrasena</label>
+              <label className="block text-sm font-semibold text-text-main mb-1.5">Contrasena</label>
               <div className="relative">
-                <FiLock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <FiLock className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4 pointer-events-none" />
                 <input
                   type="password"
                   value={form.password}
                   onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
                   required
-                  className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-green-300 focus:border-green-400"
+                  autoComplete="current-password"
                   placeholder="••••••••"
+                  className="input pl-10"
                 />
               </div>
             </div>
 
+            {/* Error */}
             {error && (
-              <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-xl px-4 py-3">
+              <div className="bg-red-50 border border-red-200 text-danger text-sm rounded-xl px-4 py-3 font-medium">
                 {error}
               </div>
             )}
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full btn-primary py-2.5 text-sm"
-            >
-              {loading ? 'Ingresando...' : 'Ingresar'}
+            {/* Submit */}
+            <button type="submit" disabled={submitting} className="btn-primary w-full py-3">
+              {submitting ? 'Ingresando...' : (
+                <>Ingresar <FiArrowRight className="w-4 h-4" /></>
+              )}
             </button>
           </form>
-
-          <p className="text-center text-xs text-gray-400 mt-4">
-            Usa las mismas credenciales de StudyTree
-          </p>
         </div>
       </div>
     </div>

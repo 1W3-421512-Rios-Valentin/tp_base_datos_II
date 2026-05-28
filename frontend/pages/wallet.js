@@ -3,7 +3,7 @@ import api from '../lib/api';
 import { useAuth } from '../context/AuthContext';
 import Layout from '../components/Layout';
 import Link from 'next/link';
-import { FiHeart, FiClock } from 'react-icons/fi';
+import { FiHeart, FiClock, FiExternalLink } from 'react-icons/fi';
 
 export default function Wallet() {
   const { user } = useAuth();
@@ -67,6 +67,22 @@ export default function Wallet() {
                 </div>
               </div>
             </div>
+
+            {/* Ir a StudyBenefits */}
+            <button
+              onClick={() => {
+                const token = localStorage.getItem('token');
+                const benefitsUrl = `http://${window.location.hostname}:3001`;
+                const dest = token ? `${benefitsUrl}/?token=${token}` : `${benefitsUrl}/login`;
+                window.open(dest, '_blank');
+              }}
+              className="w-full mb-6 flex items-center justify-center gap-3 py-4 px-5 rounded-xl font-bold text-sm transition-all"
+              style={{background:'#FECE14', color:'#000', border:'2px solid #1C293C', boxShadow:'4px 4px 0 #1C293C'}}
+            >
+              <span className="text-lg">🎁</span>
+              Canjear tokens en StudyBenefits
+              <FiExternalLink className="w-4 h-4" />
+            </button>
 
             {/* Cómo ganar más */}
             <div className="card mb-6">
