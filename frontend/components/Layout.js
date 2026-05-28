@@ -1,12 +1,38 @@
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useAuth } from '../context/AuthContext';
+import { useSocket } from '../context/SocketContext';
 import { FiHome, FiPlusSquare, FiUser, FiLogOut, FiFolder, FiMenu, FiX, FiCpu, FiHeart, FiMessageCircle } from 'react-icons/fi';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import api from '../lib/api';
 
 export default function Layout({ children }) {
   const { user, logout } = useAuth();
+  const { socket } = useSocket();
+  const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  // Cargar conteo desde API (al montar y al cambiar de ruta)
+  useEffect(() => {
+    if (!user) { setUnreadCount(0); return; }
+    api.get('/chat/unread')
+      .then(res => setUnreadCount(res.data.count))
+      .catch(() => {});
+  }, [user, router.pathname]);
+
+  // Incrementar en tiempo real al recibir mensaje (solo si no estás en la pantalla de chat)
+  useEffect(() => {
+    if (!socket) return;
+    const onMessage = () => {
+      if (!router.pathname.startsWith('/chat')) {
+        setUnreadCount(prev => prev + 1);
+      }
+    };
+    socket.on('receive_message', onMessage);
+    return () => socket.off('receive_message', onMessage);
+  }, [socket, router.pathname]);
 
   const handleLogout = () => {
     logout();
@@ -84,7 +110,14 @@ export default function Layout({ children }) {
                     href="/chats"
                     className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-blue-50 text-secondary transition-colors"
                   >
-                    <FiMessageCircle className="w-5 h-5" />
+                    <div className="relative">
+                      <FiMessageCircle className="w-5 h-5" />
+                      {unreadCount > 0 && (
+                        <span className="absolute -top-2 -right-2 min-w-[16px] h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center px-0.5">
+                          {unreadCount > 99 ? '99+' : unreadCount}
+                        </span>
+                      )}
+                    </div>
                     <span className="text-sm font-medium hidden lg:inline">Chats</span>
                   </Link>
 
@@ -210,11 +243,23 @@ export default function Layout({ children }) {
 
                   <Link
                     href="/chats"
-                    onClick={() => setMobileMenuOpen(false)}
+                    onClick={() => { setMobileMenuOpen(false); setUnreadCount(0); }}
                     className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-blue-50 text-secondary w-full"
                   >
-                    <FiMessageCircle className="w-5 h-5" />
+                    <div className="relative">
+                      <FiMessageCircle className="w-5 h-5" />
+                      {unreadCount > 0 && (
+                        <span className="absolute -top-2 -right-2 min-w-[16px] h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center px-0.5">
+                          {unreadCount > 99 ? '99+' : unreadCount}
+                        </span>
+                      )}
+                    </div>
                     <span>Chats</span>
+                    {unreadCount > 0 && (
+                      <span className="ml-auto bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                        {unreadCount}
+                      </span>
+                    )}
                   </Link>
 
                   <Link

@@ -53,6 +53,21 @@ router.get('/conversations', auth, async (req, res) => {
   }
 });
 
+// GET /api/chat/unread
+// Total de mensajes no leídos del usuario
+router.get('/unread', auth, async (req, res) => {
+  try {
+    const count = await Message.countDocuments({
+      roomId: { $regex: req.user._id.toString() },
+      sender: { $ne: req.user._id },
+      read: false
+    });
+    res.json({ count });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 // GET /api/chat/:userId
 // Historial de mensajes con un usuario específico
 router.get('/:userId', auth, async (req, res) => {
