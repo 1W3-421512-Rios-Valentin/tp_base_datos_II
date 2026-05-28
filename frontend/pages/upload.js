@@ -121,38 +121,47 @@ export default function Upload() {
           </div>
           
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-bold mb-1" style={{color:'#1C293C'}}>
               Título *
             </label>
             <input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+              className="w-full px-4 py-3"
+              style={{border:'2px solid #1C293C', borderRadius:'8px', background:'#FBFBF9', fontFamily:'Inter,Poppins,sans-serif', outline:'none'}}
+              onFocus={e => { e.target.style.borderColor='#4CAF50'; e.target.style.boxShadow='3px 3px 0 #4CAF50'; }}
+              onBlur={e => { e.target.style.borderColor='#1C293C'; e.target.style.boxShadow='none'; }}
               required
             />
           </div>
           
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-bold mb-1" style={{color:'#1C293C'}}>
               Descripción
             </label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+              className="w-full px-4 py-3"
+              style={{border:'2px solid #1C293C', borderRadius:'8px', background:'#FBFBF9', fontFamily:'Inter,Poppins,sans-serif', outline:'none', resize:'vertical'}}
+              onFocus={e => { e.target.style.borderColor='#4CAF50'; e.target.style.boxShadow='3px 3px 0 #4CAF50'; }}
+              onBlur={e => { e.target.style.borderColor='#1C293C'; e.target.style.boxShadow='none'; }}
             />
           </div>
           
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-bold mb-1" style={{color:'#1C293C'}}>
               Categoría *
             </label>
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+              className="w-full px-4 py-3"
+              style={{border:'2px solid #1C293C', borderRadius:'8px', background:'#FBFBF9', fontFamily:'Inter,Poppins,sans-serif', outline:'none'}}
+              onFocus={e => { e.target.style.borderColor='#4CAF50'; e.target.style.boxShadow='3px 3px 0 #4CAF50'; }}
+              onBlur={e => { e.target.style.borderColor='#1C293C'; e.target.style.boxShadow='none'; }}
               required
             >
               <option value="">Selecciona una categoría</option>
@@ -163,7 +172,7 @@ export default function Upload() {
           </div>
           
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-bold mb-1" style={{color:'#1C293C'}}>
               Tags (separados por coma)
             </label>
             <input
@@ -171,7 +180,10 @@ export default function Upload() {
               value={tags}
               onChange={(e) => setTags(e.target.value)}
               placeholder="integral, derivadas, examen final"
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+              className="w-full px-4 py-3"
+              style={{border:'2px solid #1C293C', borderRadius:'8px', background:'#FBFBF9', fontFamily:'Inter,Poppins,sans-serif', outline:'none'}}
+              onFocus={e => { e.target.style.borderColor='#4CAF50'; e.target.style.boxShadow='3px 3px 0 #4CAF50'; }}
+              onBlur={e => { e.target.style.borderColor='#1C293C'; e.target.style.boxShadow='none'; }}
             />
           </div>
           

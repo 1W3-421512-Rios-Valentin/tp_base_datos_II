@@ -51,7 +51,7 @@ export default function AIPage() {
   return (
     <Layout>
       <div className="space-y-4">
-        <h1 className="text-2xl font-bold text-secondary">Recomendación IA</h1>
+        <h1 className="text-2xl font-black" style={{color:'#1C293C', fontFamily:'Inter,Poppins,sans-serif', letterSpacing:'-0.02em'}}>Recomendación IA</h1>
         <p className="text-sm text-muted">Elegí tu examen y obtené recomendaciones de apuntes.</p>
         <ExamAISimulator initialResources={resources} />
       </div>

@@ -5,6 +5,7 @@ import Layout from '../components/Layout';
 import ResourceCard from '../components/ResourceCard';
 import { useAuth } from '../context/AuthContext';
 import { FiArrowRight, FiBook, FiUsers, FiZap, FiTarget } from 'react-icons/fi';
+import Image from 'next/image';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, EffectFade, Navigation, Pagination } from 'swiper/modules';
 import 'swiper/css';
@@ -15,24 +16,10 @@ import 'swiper/css/navigation';
 const CATEGORIES = ['Todos', 'Matemática', 'Física', 'Química', 'Biología', 'Programación', 'Economía', 'Otros'];
 
 const CAROUSEL_SLIDES = [
-  {
-    title: 'Compartí tus apuntes',
-    desc: 'Subí PDFs, presentaciones y ejercicios para que toda tu comunidad pueda aprender',
-    emoji: '📚',
-    bg: 'from-blue-500 to-indigo-600'
-  },
-  {
-    title: 'Encontrá compañeros de estudio',
-    desc: 'Hacé match con estudiantes que cursan las mismas materias y estudiá en equipo',
-    emoji: '🤝',
-    bg: 'from-green-500 to-emerald-600'
-  },
-  {
-    title: 'Ganá SanTokens',
-    desc: 'Cada match te da 10 SanTokens para canjear beneficios y descuentos exclusivos',
-    emoji: '🏆',
-    bg: 'from-yellow-500 to-orange-500'
-  }
+  { src: '/images/carousel/slide-1.png', alt: 'Gana Santokens con cada match' },
+  { src: '/images/carousel/slide-2.png', alt: 'Excelencia académica' },
+  { src: '/images/carousel/slide-3.png', alt: 'Universidades de todo el mundo' },
+  { src: '/images/carousel/slide-4.png', alt: 'Encontrá compañeros de estudio' },
 ];
 
 const LandingPage = () => {
@@ -41,28 +28,30 @@ const LandingPage = () => {
       <style jsx>{`\n        @keyframes fadeInUp {\n          from {\n            opacity: 0;\n            transform: translateY(30px);\n          }\n          to {\n            opacity: 1;\n            transform: translateY(0);\n          }\n        }\n        .fade-in-up {\n          animation: fadeInUp 0.8s ease-out forwards;\n          opacity: 0;\n        }\n        .swiper-container {\n          border-radius: 1.5rem;\n          overflow: hidden;\n        }\n      `}</style>
 
       {/* Hero Section */}
-      <div className="relative min-h-screen -mx-4 -my-8 overflow-hidden flex items-center">
+      <div className="relative min-h-screen -mx-4 -my-8 overflow-hidden flex items-center" style={{ background: '#FBFBF9' }}>
         <div className="max-w-7xl mx-auto px-4 py-20 w-full">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Left Side - Text */}
             <div className="space-y-6 z-10">
-              <h1 className="fade-in-up title text-5xl lg:text-6xl leading-tight" style={{ animationDelay: '0s' }}>
-                Todos tus archivos <span className="title-highlight">en un mismo lugar</span>
+              <h1 className="fade-in-up text-5xl lg:text-6xl font-black leading-tight tracking-tight" style={{ animationDelay: '0s', color: '#1C293C', fontFamily: 'Inter, Poppins, sans-serif' }}>
+                Todos tus archivos <span style={{ color: '#4CAF50' }}>en un mismo lugar</span>
               </h1>
-              <p className="fade-in-up text-xl text-muted leading-relaxed" style={{ animationDelay: '0.2s' }}>
+              <p className="fade-in-up text-xl leading-relaxed" style={{ animationDelay: '0.2s', color: '#4B5563', fontFamily: 'Inter, Poppins, sans-serif' }}>
                 Hecho por estudiantes, para estudiantes. Comparte apuntes, ejercicios y resumenes con tu comunidad académica.
               </p>
-              <div className="flex gap-4 pt-4 fade-in-up" style={{ animationDelay: '0.4s' }}>
+              <div className="flex flex-wrap gap-4 pt-4 fade-in-up" style={{ animationDelay: '0.4s' }}>
                 <Link
                   href="/register"
-                  className="button-primary inline-flex items-center gap-2 px-8 py-4 font-semibold shadow-lg hover:shadow-xl"
+                  className="inline-flex items-center gap-2 px-8 py-4 font-bold transition-all active:translate-x-[2px] active:translate-y-[2px]"
+                  style={{ background: '#4CAF50', color: '#fff', border: '2px solid #1C293C', borderRadius: '10px', boxShadow: '4px 4px 0 #1C293C', fontFamily: 'Inter, Poppins, sans-serif' }}
                 >
                   Comienza ahora
                   <FiArrowRight className="w-5 h-5" />
                 </Link>
                 <Link
                   href="/login"
-                  className="inline-flex items-center gap-2 px-8 py-4 bg-white text-secondary border-2 border-secondary rounded-lg font-semibold hover:bg-blue-50 transition-all"
+                  className="inline-flex items-center gap-2 px-8 py-4 font-bold transition-all active:translate-x-[2px] active:translate-y-[2px]"
+                  style={{ background: '#FBFBF9', color: '#1C293C', border: '2px solid #1C293C', borderRadius: '10px', boxShadow: '4px 4px 0 #1C293C', fontFamily: 'Inter, Poppins, sans-serif' }}
                 >
                   Inicia sesión
                 </Link>
@@ -70,7 +59,7 @@ const LandingPage = () => {
             </div>
 
             {/* Right Side - Carousel */}
-            <div className="relative rounded-2xl overflow-hidden shadow-2xl">
+            <div className="relative overflow-hidden" style={{ border: '2.5px solid #1C293C', borderRadius: '14px', boxShadow: '6px 6px 0 #1C293C' }}>
               <Swiper
                 modules={[Autoplay, EffectFade, Pagination]}
                 effect="fade"
@@ -81,10 +70,15 @@ const LandingPage = () => {
               >
                 {CAROUSEL_SLIDES.map((slide, index) => (
                   <SwiperSlide key={index}>
-                    <div className={`bg-gradient-to-br ${slide.bg} p-12 flex flex-col items-center justify-center text-white text-center min-h-[320px]`}>
-                      <div className="text-8xl mb-6">{slide.emoji}</div>
-                      <h3 className="text-2xl font-bold mb-3">{slide.title}</h3>
-                      <p className="text-white/80 text-base leading-relaxed max-w-xs">{slide.desc}</p>
+                    <div className="relative w-full bg-white flex items-center justify-center" style={{ height: '360px' }}>
+                      <Image
+                        src={slide.src}
+                        alt={slide.alt}
+                        fill
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                        className="object-contain"
+                        priority={index === 0}
+                      />
                     </div>
                   </SwiperSlide>
                 ))}
@@ -124,26 +118,27 @@ const LandingPage = () => {
               return (
                 <div
                   key={idx}
-                  className="fade-in-up card border border-gray-100 hover:shadow-md hover:border-primary transition-all"
-                  style={{ animationDelay: feature.delay }}
+                  className="fade-in-up card transition-all hover:-translate-y-1"
+                  style={{ animationDelay: feature.delay, border: '2px solid #1C293C', borderRadius: '12px', boxShadow: '4px 4px 0 #1C293C', fontFamily: 'Inter, Poppins, sans-serif' }}
                 >
-                  <div className="text-primary text-3xl mb-3">
+                  <div className="mb-3" style={{ color: '#4CAF50' }}>
                     <Icon className="w-8 h-8" />
                   </div>
-                  <h3 className="text-lg font-semibold text-secondary mb-2">{feature.title}</h3>
-                  <p className="text-muted text-sm">{feature.desc}</p>
+                  <h3 className="text-lg mb-2" style={{ fontWeight: 700, color: '#1C293C' }}>{feature.title}</h3>
+                  <p className="text-sm" style={{ color: '#4B5563' }}>{feature.desc}</p>
                 </div>
               );
             })}
           </div>
 
           {/* Call to Action */}
-          <div className="bg-gradient-to-r from-secondary to-primary rounded-2xl p-12 shadow-sm text-center fade-in-up mt-20" style={{ animationDelay: '1.4s' }}>
-            <h2 className="text-3xl font-bold text-white mb-4">¿Listo para transformar tu forma de estudiar?</h2>
-            <p className="text-white mb-8 text-lg opacity-90">Únete a miles de estudiantes que ya comparten y descubren material académico</p>
+          <div className="p-12 text-center fade-in-up mt-20" style={{ animationDelay: '1.4s', background: '#4CAF50', border: '2.5px solid #1C293C', borderRadius: '16px', boxShadow: '6px 6px 0 #1C293C', fontFamily: 'Inter, Poppins, sans-serif' }}>
+            <h2 className="text-3xl mb-4" style={{ fontWeight: 900, color: '#fff', letterSpacing: '-0.02em' }}>¿Listo para transformar tu forma de estudiar?</h2>
+            <p className="mb-8 text-lg" style={{ color: 'rgba(255,255,255,0.92)' }}>Únete a miles de estudiantes que ya comparten y descubren material académico</p>
             <Link
               href="/register"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-white text-primary rounded-lg font-semibold hover:shadow-lg transition-all"
+              className="inline-flex items-center gap-2 px-8 py-4 font-bold transition-all active:translate-x-[2px] active:translate-y-[2px]"
+              style={{ background: '#FBFBF9', color: '#1C293C', border: '2px solid #1C293C', borderRadius: '10px', boxShadow: '4px 4px 0 #1C293C' }}
             >
               Registrarse gratis
               <FiArrowRight className="w-5 h-5" />

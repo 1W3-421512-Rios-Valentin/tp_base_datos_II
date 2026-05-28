@@ -40,27 +40,33 @@ export default function Register() {
           
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-bold mb-1" style={{color:'#1C293C'}}>
                 Usuario
               </label>
               <input
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                className="w-full px-4 py-3"
+                style={{border:'2px solid #1C293C', borderRadius:'8px', background:'#FBFBF9', fontFamily:'Inter,Poppins,sans-serif', outline:'none'}}
+                onFocus={e => { e.target.style.borderColor='#4CAF50'; e.target.style.boxShadow='3px 3px 0 #4CAF50'; }}
+                onBlur={e => { e.target.style.borderColor='#1C293C'; e.target.style.boxShadow='none'; }}
                 required
               />
             </div>
             
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-bold mb-1" style={{color:'#1C293C'}}>
                 Contraseña
               </label>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                className="w-full px-4 py-3"
+                style={{border:'2px solid #1C293C', borderRadius:'8px', background:'#FBFBF9', fontFamily:'Inter,Poppins,sans-serif', outline:'none'}}
+                onFocus={e => { e.target.style.borderColor='#4CAF50'; e.target.style.boxShadow='3px 3px 0 #4CAF50'; }}
+                onBlur={e => { e.target.style.borderColor='#1C293C'; e.target.style.boxShadow='none'; }}
                 required
               />
             </div>

@@ -78,11 +78,11 @@ export default function UserProfile() {
   return (
     <Layout>
       {/* Profile Header */}
-      <div className="bg-gradient-to-br from-green-50 to-blue-50 rounded-2xl shadow-sm border border-gray-100 p-8 mb-8">
+      <div className="p-8 mb-8" style={{background:'#fff', border:'2px solid #1C293C', borderRadius:'14px', boxShadow:'6px 6px 0 #1C293C'}}>
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
           <div className="flex items-center gap-6">
             {/* Avatar */}
-            <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-white border-4 border-primary shadow-lg flex items-center justify-center overflow-hidden flex-shrink-0">
+            <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full flex items-center justify-center overflow-hidden flex-shrink-0" style={{background:'#FBFBF9', border:'3px solid #1C293C', boxShadow:'4px 4px 0 #1C293C'}}>
               {profile.avatar ? (
                 <img
                   src={profile.avatar}
@@ -138,7 +138,7 @@ export default function UserProfile() {
             {isOwnProfile ? (
               <Link
                 href="/edit-profile"
-                className="button-primary flex items-center justify-center gap-2 w-full px-4 py-2 rounded-lg font-medium transition-all"
+                className="button-primary flex items-center justify-center gap-2 w-full px-4 py-2 font-bold transition-all"
               >
                 <FiEdit3 className="w-4 h-4" />
                 Editar perfil
@@ -146,11 +146,10 @@ export default function UserProfile() {
             ) : currentUser ? (
               <button
                 onClick={handleFollow}
-                className={`flex items-center justify-center gap-2 w-full px-4 py-2 rounded-lg font-medium transition-all ${
-                  isFollowing
-                    ? 'border-2 border-primary text-primary hover:bg-green-50'
-                    : 'button-primary text-white'
-                }`}
+                className="flex items-center justify-center gap-2 w-full px-4 py-2 font-bold transition-all"
+                style={isFollowing
+                  ? {background:'#FBFBF9', color:'#4CAF50', border:'2px solid #1C293C', borderRadius:'10px', boxShadow:'3px 3px 0 #1C293C', cursor:'pointer'}
+                  : {background:'#4CAF50', color:'#fff', border:'2px solid #1C293C', borderRadius:'10px', boxShadow:'3px 3px 0 #1C293C', cursor:'pointer'}}
               >
                 {isFollowing ? (
                   <>
@@ -176,7 +175,7 @@ export default function UserProfile() {
         </h2>
 
         {resources.length === 0 ? (
-          <div className="text-center py-12 bg-white rounded-xl border border-gray-100">
+          <div className="text-center py-12 bg-white" style={{border:'2px solid #1C293C', borderRadius:'12px', boxShadow:'4px 4px 0 #1C293C'}}>
             <FiFile className="w-12 h-12 mx-auto text-gray-300" />
             <p className="text-gray-500 mt-3">
               {isOwnProfile

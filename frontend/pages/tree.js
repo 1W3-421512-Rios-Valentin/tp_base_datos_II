@@ -25,18 +25,18 @@ const ProtectedLanding = () => {
         }
       `}</style>
 
-      <div className="relative min-h-screen -mx-4 -my-8 bg-gradient-to-br from-green-50 to-blue-50 overflow-hidden flex items-center">
+      <div className="relative min-h-screen -mx-4 -my-8 overflow-hidden flex items-center" style={{background:'#FBFBF9'}}>
         <div className="max-w-4xl mx-auto px-4 py-20 w-full text-center">
           <div className="space-y-8">
             <div className="fade-in-up" style={{ animationDelay: '0s' }}>
-              <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-primary to-secondary rounded-3xl shadow-lg">
+              <div className="inline-flex items-center justify-center w-24 h-24 text-white" style={{background:'#4CAF50', border:'2px solid #1C293C', borderRadius:'14px', boxShadow:'6px 6px 0 #1C293C'}}>
                 <FiLock className="w-12 h-12 text-white" />
               </div>
             </div>
 
             <div className="fade-in-up" style={{ animationDelay: '0.2s' }}>
               <h1 className="title text-5xl mb-4">Tu árbol de estudio</h1>
-              <p className="text-2xl text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary font-semibold">
+              <p className="text-2xl font-black" style={{color:'#4CAF50'}}>
                 Es exclusivo para ti
               </p>
             </div>
@@ -53,12 +53,12 @@ const ProtectedLanding = () => {
                 <h3 className="font-semibold text-gray-900 mb-2">Guarda favoritos</h3>
                 <p className="text-sm text-gray-600">Dale corazón a los archivos que más te sirven</p>
               </div>
-              <div className="card border border-green-100">
+              <div className="card">
                 <FiFolder className="w-8 h-8 text-primary mx-auto mb-3" />
                 <h3 className="font-semibold text-gray-900 mb-2">Organiza por tema</h3>
                 <p className="text-sm text-gray-600">Agrupa materiales por categoría automáticamente</p>
               </div>
-              <div className="card border border-green-100">
+              <div className="card">
                 <FiFile className="w-8 h-8 text-primary mx-auto mb-3" />
                 <h3 className="font-semibold text-gray-900 mb-2">Acceso rápido</h3>
                 <p className="text-sm text-gray-600">Encuentra tus apuntes favoritos al instante</p>

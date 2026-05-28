@@ -33,10 +33,10 @@ export default function Matches() {
       <div className="max-w-2xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
+            <h1 className="text-2xl font-black flex items-center gap-2" style={{color:'#1C293C', fontFamily:'Inter,Poppins,sans-serif'}}>
               <FiHeart className="text-primary" /> Mis matches
             </h1>
-            <p className="text-sm text-gray-500">{matches.length} compañeros de estudio encontrados</p>
+            <p className="text-sm" style={{color:'#4B5563'}}>{matches.length} compañeros de estudio encontrados</p>
           </div>
           <Link href="/study-match" className="button-primary px-4 py-2 text-sm font-semibold">
             Buscar más
@@ -59,7 +59,7 @@ export default function Matches() {
         ) : (
           <div className="space-y-3">
             {matches.map(match => (
-              <div key={match._id} className="card border border-gray-100 flex items-center gap-4 hover:shadow-md transition-all group">
+              <div key={match._id} className="card flex items-center gap-4 transition-all" style={{cursor:'pointer'}}>
                 <div className="w-14 h-14 rounded-full bg-primary text-white flex items-center justify-center text-xl font-bold overflow-hidden flex-shrink-0">
                   {match.avatar ? (
                     <img src={`http://localhost:5000${match.avatar}`} alt={match.username} className="w-full h-full object-cover" />
@@ -74,20 +74,21 @@ export default function Matches() {
                   {match.subjects?.length > 0 && (
                     <div className="flex flex-wrap gap-1 mt-1">
                       {match.subjects.slice(0, 3).map(s => (
-                        <span key={s} className="px-2 py-0.5 bg-green-50 text-green-700 rounded-full text-xs">{s}</span>
+                        <span key={s} className="px-2 py-0.5 text-xs font-bold" style={{background:'#dcfce7', color:'#16a34a', border:'1.5px solid #16a34a', borderRadius:'999px'}}>{s}</span>
                       ))}
                     </div>
                   )}
                 </div>
 
                 <div className="text-right flex-shrink-0 flex flex-col items-end gap-2">
-                  <div className="inline-flex items-center gap-1.5 px-2 py-1 bg-yellow-50 text-yellow-700 rounded-full text-xs font-semibold">
-                    <img src="/images/santoken.png.webp" alt="ST" className="w-4 h-4 rounded-full object-cover border border-yellow-200" />
+                  <div className="inline-flex items-center gap-1.5 px-2 py-1 text-xs font-bold" style={{background:'#fef9c3', color:'#854d0e', border:'1.5px solid #854d0e', borderRadius:'999px'}}>
+                    <img src="/images/santoken.png.png" alt="ST" className="w-4 h-4 object-contain" style={{mixBlendMode:'multiply'}} />
                     +{match.santokensEarned}
                   </div>
                   <Link
                     href={`/chat/${match._id}`}
-                    className="inline-flex items-center gap-1 px-3 py-1.5 bg-primary text-white rounded-full text-xs font-semibold hover:bg-green-600 transition-all"
+                    className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-bold transition-all"
+                    style={{background:'#4CAF50', color:'#fff', border:'2px solid #1C293C', borderRadius:'8px', boxShadow:'2px 2px 0 #1C293C'}}
                   >
                     <FiMessageCircle className="w-3 h-3" /> Chat
                   </Link>

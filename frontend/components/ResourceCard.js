@@ -49,10 +49,10 @@ export default function ResourceCard({ resource }) {
 
   return (
     <Link href={`/resource/${resource._id}`}>
-      <div className="card border border-gray-100 hover:shadow-md hover:border-green-200 p-4 transition-all duration-200 cursor-pointer group">
+      <div className="card p-4 transition-all duration-150 cursor-pointer" style={{}} onMouseEnter={e => { e.currentTarget.style.transform='translate(-2px,-2px)'; e.currentTarget.style.boxShadow='6px 6px 0 #1C293C'; }} onMouseLeave={e => { e.currentTarget.style.transform=''; e.currentTarget.style.boxShadow='4px 4px 0 #1C293C'; }}>
         <div className="flex items-start gap-4">
           {/* File Icon */}
-          <div className="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg flex items-center justify-center group-hover:from-green-50 group-hover:to-blue-50 transition-colors">
+          <div className="flex-shrink-0 w-16 h-16 flex items-center justify-center" style={{background:'#FBFBF9', border:'2px solid #1C293C', borderRadius:'10px', boxShadow:'2px 2px 0 #1C293C'}}>
             {getFileIcon(resource.fileType)}
           </div>
 
@@ -60,7 +60,7 @@ export default function ResourceCard({ resource }) {
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between gap-2">
               <div className="flex-1">
-                <h3 className="font-semibold text-secondary group-hover:text-primary transition-colors truncate text-sm sm:text-base">
+                <h3 className="font-bold truncate text-sm sm:text-base" style={{color:'#1C293C', fontFamily:'Inter,Poppins,sans-serif'}}>
                   {resource.title}
                 </h3>
                 <p className="text-xs sm:text-sm text-muted truncate mt-1">
@@ -79,7 +79,7 @@ export default function ResourceCard({ resource }) {
               {/* Author */}
               {resource.user && (
                 <Link href={`/user/${resource.user._id}`} onClick={(e) => e.stopPropagation()}>
-                  <div className="flex items-center gap-1.5 px-2.5 py-1 bg-blue-50 hover:bg-blue-100 rounded-full transition-colors">
+                  <div className="flex items-center gap-1.5 px-2.5 py-1 transition-colors" style={{background:'#dcfce7', border:'1.5px solid #16a34a', borderRadius:'999px'}}>
                     <div className="w-4 h-4 rounded-full bg-primary text-white flex items-center justify-center text-xs font-bold">
                       {resource.user.username?.charAt(0).toUpperCase() || '?'}
                     </div>
@@ -91,7 +91,7 @@ export default function ResourceCard({ resource }) {
               )}
 
               {/* Category */}
-              <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${getCategoryColor(resource.category)}`}>
+              <span className="text-xs font-bold px-2.5 py-1" style={{background:'#dcfce7', color:'#16a34a', border:'1.5px solid #16a34a', borderRadius:'999px'}}>
                 {resource.category}
               </span>
 
@@ -108,7 +108,7 @@ export default function ResourceCard({ resource }) {
         </div>
 
         {/* Stats Footer */}
-        <div className="flex items-center justify-between mt-4 pt-3 border-t border-gray-100">
+        <div className="flex items-center justify-between mt-4 pt-3" style={{borderTop:'2px solid #1C293C'}}>
           <div className="flex items-center gap-3">
             <button 
               onClick={handleLike}

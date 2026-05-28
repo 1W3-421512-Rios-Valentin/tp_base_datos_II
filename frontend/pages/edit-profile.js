@@ -31,10 +31,12 @@ function TagInput({ tags, onChange, placeholder }) {
   const removeTag = (tag) => onChange(tags.filter(t => t !== tag));
 
   return (
-    <div className="border border-gray-200 rounded-lg px-3 py-2 focus-within:ring-2 focus-within:ring-primary">
+    <div style={{border:'2px solid #1C293C', borderRadius:'10px', padding:'8px 12px'}}
+      className={`focus-within:border-primary focus-within:shadow-[3px_3px_0_#4CAF50]`}
+    >
       <div className="flex flex-wrap gap-2 mb-2">
         {tags.map(tag => (
-          <span key={tag} className="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">
+          <span key={tag} className="inline-flex items-center gap-1 px-2 py-1 text-sm font-bold" style={{background:'#dcfce7', color:'#16a34a', border:'1.5px solid #16a34a', borderRadius:'999px'}}>
             {tag}
             <button type="button" onClick={() => removeTag(tag)}>
               <FiX className="w-3 h-3" />
@@ -49,7 +51,8 @@ function TagInput({ tags, onChange, placeholder }) {
         onKeyDown={handleKeyDown}
         onBlur={() => addTag(input)}
         placeholder={placeholder}
-        className="w-full outline-none text-sm text-gray-700 placeholder-gray-400"
+        className="w-full text-sm"
+        style={{outline:'none', border:'none', background:'transparent', color:'#1C293C', fontFamily:'Inter,Poppins,sans-serif'}}
       />
     </div>
   );
@@ -205,10 +208,10 @@ export default function EditProfile() {
                   )}
                 </div>
                 <div className="flex-1">
-                  <label className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-xl p-6 cursor-pointer hover:border-primary hover:bg-green-50 transition-all">
-                    <FiUploadCloud className="w-8 h-8 text-gray-400 mb-2" />
-                    <span className="text-sm font-medium text-gray-600">{avatarFile ? avatarFile.name : 'Sube una foto'}</span>
-                    <span className="text-xs text-gray-400 mt-1">PNG, JPG hasta 5MB</span>
+                  <label className="flex flex-col items-center justify-center p-6 cursor-pointer transition-all" style={{border:'2px dashed #1C293C', borderRadius:'10px', boxShadow:'3px 3px 0 #1C293C'}} onMouseEnter={e => {e.currentTarget.style.background='#dcfce7';e.currentTarget.style.borderColor='#4CAF50';}} onMouseLeave={e => {e.currentTarget.style.background='';e.currentTarget.style.borderColor='#1C293C';}}>
+                    <FiUploadCloud className="w-8 h-8 mb-2" style={{color:'#4B5563'}} />
+                    <span className="text-sm font-bold" style={{color:'#1C293C'}}>{avatarFile ? avatarFile.name : 'Sube una foto'}</span>
+                    <span className="text-xs mt-1" style={{color:'#4B5563'}}>PNG, JPG hasta 5MB</span>
                     <input type="file" accept="image/*" onChange={handleAvatarChange} className="hidden" />
                   </label>
                 </div>
@@ -217,34 +220,40 @@ export default function EditProfile() {
 
             {/* Username */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Usuario</label>
+              <label className="block text-sm font-bold mb-2" style={{color:'#1C293C'}}>Usuario</label>
               <input
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                className="w-full px-4 py-3"
+                style={{border:'2px solid #1C293C', borderRadius:'8px', background:'#FBFBF9', fontFamily:'Inter,Poppins,sans-serif', outline:'none'}}
+                onFocus={e => { e.target.style.borderColor='#4CAF50'; e.target.style.boxShadow='3px 3px 0 #4CAF50'; }}
+                onBlur={e => { e.target.style.borderColor='#1C293C'; e.target.style.boxShadow='none'; }}
                 required
               />
             </div>
 
             {/* Bio */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Biografía</label>
+              <label className="block text-sm font-bold mb-2" style={{color:'#1C293C'}}>Biografía</label>
               <textarea
                 value={bio}
                 onChange={(e) => setBio(e.target.value)}
                 maxLength={160}
                 rows={3}
                 placeholder="Cuéntanos sobre ti... (máximo 160 caracteres)"
-                className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all resize-none"
+                className="w-full px-4 py-3"
+                style={{border:'2px solid #1C293C', borderRadius:'8px', background:'#FBFBF9', fontFamily:'Inter,Poppins,sans-serif', outline:'none', resize:'none'}}
+                onFocus={e => { e.target.style.borderColor='#4CAF50'; e.target.style.boxShadow='3px 3px 0 #4CAF50'; }}
+                onBlur={e => { e.target.style.borderColor='#1C293C'; e.target.style.boxShadow='none'; }}
               />
-              <p className="text-xs text-gray-400 mt-1">{bio.length}/160 caracteres</p>
+              <p className="text-xs mt-1" style={{color:'#4B5563'}}>{bio.length}/160 caracteres</p>
             </div>
 
             {/* Divider */}
-            <div className="border-t border-gray-100 pt-6">
-              <h2 className="text-lg font-bold text-gray-800 mb-1">Perfil de estudio</h2>
-              <p className="text-sm text-gray-500 mb-5">Usado para encontrar compañeros de estudio compatibles</p>
+            <div className="pt-6" style={{borderTop:'2px solid #1C293C'}}>
+              <h2 className="text-lg font-black mb-1" style={{color:'#1C293C', fontFamily:'Inter,Poppins,sans-serif'}}>Perfil de estudio</h2>
+              <p className="text-sm mb-5" style={{color:'#4B5563'}}>Usado para encontrar compañeros de estudio compatibles</p>
 
               {/* Año de cursado */}
               <div className="mb-5">
@@ -255,11 +264,10 @@ export default function EditProfile() {
                       key={year}
                       type="button"
                       onClick={() => setStudyYear(studyYear === year ? '' : year)}
-                      className={`px-4 py-2 rounded-full text-sm font-medium border transition-all ${
-                        studyYear === year
-                          ? 'bg-primary text-white border-primary'
-                          : 'bg-white text-gray-600 border-gray-200 hover:border-primary'
-                      }`}
+                      className="px-4 py-2 text-sm font-bold transition-all"
+                      style={studyYear === year
+                        ? {background:'#4CAF50', color:'#fff', border:'2px solid #1C293C', borderRadius:'999px', boxShadow:'2px 2px 0 #1C293C'}
+                        : {background:'#FBFBF9', color:'#1C293C', border:'2px solid #1C293C', borderRadius:'999px'}}
                     >
                       {year}
                     </button>
@@ -286,11 +294,10 @@ export default function EditProfile() {
                       key={lang}
                       type="button"
                       onClick={() => toggleLanguage(lang)}
-                      className={`px-4 py-2 rounded-full text-sm font-medium border transition-all ${
-                        languages.includes(lang)
-                          ? 'bg-primary text-white border-primary'
-                          : 'bg-white text-gray-600 border-gray-200 hover:border-primary'
-                      }`}
+                      className="px-4 py-2 text-sm font-bold transition-all"
+                      style={languages.includes(lang)
+                        ? {background:'#4CAF50', color:'#fff', border:'2px solid #1C293C', borderRadius:'999px', boxShadow:'2px 2px 0 #1C293C'}
+                        : {background:'#FBFBF9', color:'#1C293C', border:'2px solid #1C293C', borderRadius:'999px'}}
                     >
                       {lang}
                     </button>
@@ -306,7 +313,8 @@ export default function EditProfile() {
                     type="button"
                     onClick={handleGetLocation}
                     disabled={locating}
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 text-sm font-medium text-gray-600 hover:border-primary hover:text-primary transition-all disabled:opacity-50"
+                    className="inline-flex items-center gap-2 px-4 py-2 text-sm font-bold transition-all disabled:opacity-50"
+                    style={{border:'2px solid #1C293C', borderRadius:'8px', boxShadow:'2px 2px 0 #1C293C', background:'#FBFBF9', color:'#1C293C', cursor:'pointer'}}
                   >
                     <FiMapPin className="w-4 h-4" />
                     {locating ? 'Obteniendo...' : 'Usar mi ubicación actual'}
@@ -331,7 +339,8 @@ export default function EditProfile() {
               </button>
               <Link
                 href={`/user/${user.id}`}
-                className="flex-1 py-3 bg-gray-100 text-gray-700 rounded-lg font-semibold hover:bg-gray-200 text-center transition-all"
+                className="flex-1 py-3 font-bold text-center transition-all"
+                style={{background:'#FBFBF9', color:'#1C293C', border:'2px solid #1C293C', borderRadius:'10px', boxShadow:'3px 3px 0 #1C293C', textDecoration:'none', display:'flex', alignItems:'center', justifyContent:'center'}}
               >
                 Cancelar
               </Link>

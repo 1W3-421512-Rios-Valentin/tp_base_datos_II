@@ -123,7 +123,7 @@ export default function ChatPage() {
       <div className="max-w-2xl mx-auto flex flex-col h-[calc(100vh-12rem)]">
         {/* Header */}
         <div className="flex items-center gap-3 mb-4 flex-shrink-0">
-          <Link href="/chats" className="p-2 rounded-lg hover:bg-gray-100 text-gray-500 transition-all">
+          <Link href="/chats" className="p-2 transition-all" style={{borderRadius:'8px', border:'2px solid transparent', color:'#1C293C'}} onMouseEnter={e=>{e.currentTarget.style.border='2px solid #1C293C';e.currentTarget.style.background='#dcfce7';}} onMouseLeave={e=>{e.currentTarget.style.border='2px solid transparent';e.currentTarget.style.background='';}}>
             <FiArrowLeft className="w-5 h-5" />
           </Link>
           <div className="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold overflow-hidden flex-shrink-0">
@@ -134,7 +134,7 @@ export default function ChatPage() {
             )}
           </div>
           <div>
-            <p className="font-semibold text-gray-800">{otherUser?.username}</p>
+            <p className="font-bold" style={{color:'#1C293C', fontFamily:'Inter,Poppins,sans-serif'}}>{otherUser?.username}</p>
             {otherUser?.studyYear && <p className="text-xs text-gray-400">{otherUser.studyYear}</p>}
           </div>
         </div>
@@ -162,14 +162,13 @@ export default function ChatPage() {
                 )}
                 <div className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
                   <div
-                    className={`max-w-[75%] px-4 py-2 rounded-2xl text-sm ${
-                      isMe
-                        ? 'bg-primary text-white rounded-br-sm'
-                        : 'bg-white border border-gray-100 text-gray-800 rounded-bl-sm shadow-sm'
-                    }`}
+                    className={`max-w-[75%] px-4 py-2 text-sm`}
+                    style={isMe
+                      ? {background:'#4CAF50', color:'#fff', border:'2px solid #1C293C', borderRadius:'14px 14px 4px 14px', boxShadow:'2px 2px 0 #1C293C'}
+                      : {background:'#FBFBF9', color:'#1C293C', border:'2px solid #1C293C', borderRadius:'14px 14px 14px 4px', boxShadow:'2px 2px 0 #1C293C'}}
                   >
                     <p className="leading-relaxed">{msg.text}</p>
-                    <p className={`text-[10px] mt-1 text-right ${isMe ? 'text-green-100' : 'text-gray-400'}`}>
+            <p className={`text-[10px] mt-1 text-right`} style={{color: isMe ? 'rgba(255,255,255,0.7)' : '#9CA3AF'}}>
                       {formatTime(msg.createdAt)}
                     </p>
                   </div>
@@ -201,12 +200,18 @@ export default function ChatPage() {
             onKeyDown={handleKeyDown}
             placeholder="Escribí un mensaje... (Enter para enviar)"
             rows={1}
-            className="flex-1 px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary resize-none text-sm"
+            className="flex-1 px-4 py-3 resize-none text-sm"
+            style={{border:'2px solid #1C293C', borderRadius:'10px', background:'#FBFBF9', fontFamily:'Inter,Poppins,sans-serif', outline:'none'}}
+            onFocus={e => { e.target.style.borderColor='#4CAF50'; e.target.style.boxShadow='3px 3px 0 #4CAF50'; }}
+            onBlur={e => { e.target.style.borderColor='#1C293C'; e.target.style.boxShadow='none'; }}
           />
           <button
             type="submit"
             disabled={!text.trim() || sending}
-            className="px-4 py-3 bg-primary text-white rounded-xl hover:bg-green-600 transition-all disabled:opacity-40 flex items-center gap-1.5 font-medium"
+            className="px-4 py-3 flex items-center gap-1.5 font-bold transition-all disabled:opacity-40"
+            style={{background:'#4CAF50', color:'#fff', border:'2px solid #1C293C', borderRadius:'10px', boxShadow:'3px 3px 0 #1C293C', cursor:'pointer'}}
+            onMouseEnter={e => { if(!e.currentTarget.disabled) { e.currentTarget.style.transform='translate(-1px,-1px)'; e.currentTarget.style.boxShadow='4px 4px 0 #1C293C'; }}}
+            onMouseLeave={e => { e.currentTarget.style.transform=''; e.currentTarget.style.boxShadow='3px 3px 0 #1C293C'; }}
           >
             <FiSend className="w-4 h-4" />
           </button>

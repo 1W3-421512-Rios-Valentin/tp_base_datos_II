@@ -1,130 +1,129 @@
 /* =========================
-   🎨 VARIABLES GLOBALES
+   🎨 NEOBRUTALISM - StudyTree
 ========================= */
 :root {
   --color-primary: #4CAF50;
   --color-primary-dark: #43a047;
-  --color-secondary: #2C3E50;
-  --color-secondary-light: #3A6EA5;
-
-  --color-green-light: #A8D5BA;
-  --color-green-bg: #CDEED8;
-
-  --color-bg-main: #F4F7FA;
-  --color-bg-soft: #EAF3F9;
-
-  --color-accent-yellow: #F4C542;
-
-  --color-text: #2C3E50;
-  --color-text-muted: #6B7280;
-
-  --border-radius: 20px;
-  --shadow-soft: 0 10px 25px rgba(0,0,0,0.08);
+  --color-secondary: #1C293C;
+  --color-surface: #FBFBF9;
+  --color-text: #1C293C;
+  --color-text-muted: #4B5563;
+  --nb-border: 2px solid #1C293C;
+  --nb-shadow: 4px 4px 0 #1C293C;
+  --nb-shadow-sm: 3px 3px 0 #1C293C;
+  --nb-radius: 10px;
+  --font-base: 'Inter', 'Poppins', 'Segoe UI', sans-serif;
 }
 
-/* =========================
-   🔤 TIPOGRAFÍA
-========================= */
 body {
   margin: 0;
-  font-family: 'Poppins', 'Segoe UI', sans-serif;
-  background: linear-gradient(135deg, var(--color-bg-main), var(--color-bg-soft));
+  font-family: var(--font-base);
+  background: var(--color-surface);
   color: var(--color-text);
 }
 
-/* =========================
-   🧱 CONTENEDORES
-========================= */
-.container {
-  padding: 20px;
-}
+.container { padding: 20px; }
 
 .card {
-  background: white;
-  border-radius: var(--border-radius);
-  box-shadow: var(--shadow-soft);
+  background: #fff;
+  border-radius: var(--nb-radius);
+  border: var(--nb-border);
+  box-shadow: var(--nb-shadow);
   padding: 20px;
 }
 
-/* =========================
-   🏷️ TÍTULOS
-========================= */
 .title {
   font-size: 2rem;
-  font-weight: 600;
+  font-weight: 900;
   color: var(--color-secondary);
+  font-family: var(--font-base);
+  letter-spacing: -0.02em;
 }
 
-.title-highlight {
-  color: var(--color-primary);
-}
+.title-highlight { color: var(--color-primary); }
+.text-muted { color: var(--color-text-muted); font-size: 0.95rem; }
 
-/* =========================
-   📝 TEXTO
-========================= */
-.text-muted {
-  color: var(--color-text-muted);
-  font-size: 0.95rem;
-}
-
-/* =========================
-   🔘 BOTONES
-========================= */
 .button-primary {
   background: var(--color-primary);
-  color: white;
-  border: none;
-  border-radius: 12px;
+  color: #fff;
+  border: var(--nb-border);
+  border-radius: var(--nb-radius);
   padding: 12px 20px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  font-weight: 700;
+  font-family: var(--font-base);
+  box-shadow: var(--nb-shadow-sm);
+  transition: all 0.12s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
 }
 
 .button-primary:hover {
   background: var(--color-primary-dark);
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 #1C293C;
 }
 
-/* =========================
-   ✅ CHECK / LISTAS
-========================= */
-.check {
-  color: var(--color-primary);
-  font-weight: bold;
+.button-primary:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 #1C293C;
 }
 
-/* =========================
-   🎴 CARRUSEL
-========================= */
-.carousel-item {
-  border-radius: var(--border-radius);
-  overflow: hidden;
-  box-shadow: var(--shadow-soft);
+.button-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
 }
 
-/* =========================
-   🌿 DECORACIÓN
-========================= */
+.check { color: var(--color-primary); font-weight: bold; }
+
 .badge-success {
-  background: var(--color-green-light);
-  padding: 6px 12px;
-  border-radius: 10px;
-  font-size: 0.8rem;
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  background: #dcfce7;
+  color: #16a34a;
+  border: 2px solid #16a34a;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
 }
 
-/* =========================
-   ✨ TRANSICIÓN DE PÁGINA
-========================= */
+input[type="text"],
+input[type="password"],
+input[type="email"],
+textarea,
+select {
+  border: var(--nb-border);
+  border-radius: 8px;
+  background: #FBFBF9;
+  font-family: var(--font-base);
+  color: var(--color-text);
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 3px 3px 0 var(--color-primary);
+}
+
+.carousel-item {
+  border-radius: var(--nb-radius);
+  overflow: hidden;
+  border: var(--nb-border);
+  box-shadow: var(--nb-shadow);
+}
+
 @keyframes pageEnter {
-  from {
-    opacity: 0;
-    transform: translateY(14px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.page-enter {
-  animation: pageEnter 0.45s ease-out both;
-}
+.page-enter { animation: pageEnter 0.45s ease-out both; }

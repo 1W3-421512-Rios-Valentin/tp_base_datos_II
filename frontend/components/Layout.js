@@ -42,7 +42,7 @@ export default function Layout({ children }) {
   return (
     <div className="min-h-screen">
       {/* Navigation */}
-      <nav className="bg-white border-b border-gray-200 sticky top-0 z-40 shadow-[0_10px_25px_rgba(0,0,0,0.08)]">
+      <nav className="bg-surface sticky top-0 z-40" style={{background:'#FBFBF9', borderBottom:'2px solid #1C293C', boxShadow:'0 4px 0 #1C293C'}}>
         <div className="max-w-6xl mx-auto px-4">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
@@ -63,7 +63,7 @@ export default function Layout({ children }) {
                   <span className="text-white font-bold text-lg">📚</span>
                 </div>
               </div>
-              <span className="hidden sm:inline text-xl font-bold text-secondary">
+              <span className="hidden sm:inline text-xl font-bold" style={{color:'#1C293C', fontFamily:'Inter,Poppins,sans-serif', fontWeight:900, letterSpacing:'-0.02em'}}>
                 StudyTree
               </span>
             </Link>
@@ -72,7 +72,10 @@ export default function Layout({ children }) {
             <div className="hidden md:flex items-center space-x-2">
               <Link
                 href="/"
-                className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-blue-50 text-secondary transition-colors"
+                className="flex items-center space-x-2 px-3 py-2 transition-all"
+                style={{color:'#1C293C', fontWeight:600, borderRadius:'8px'}}
+                onMouseEnter={e => { e.currentTarget.style.background='#dcfce7'; e.currentTarget.style.outline='2px solid #1C293C'; }}
+                onMouseLeave={e => { e.currentTarget.style.background=''; e.currentTarget.style.outline=''; }}
               >
                 <FiHome className="w-5 h-5" />
                 <span className="text-sm font-medium">Inicio</span>
@@ -80,7 +83,10 @@ export default function Layout({ children }) {
 
               <Link
                 href="/tree"
-                className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-blue-50 text-secondary transition-colors"
+                className="flex items-center space-x-2 px-3 py-2 transition-all"
+                style={{color:'#1C293C', fontWeight:600, borderRadius:'8px'}}
+                onMouseEnter={e => { e.currentTarget.style.background='#dcfce7'; e.currentTarget.style.outline='2px solid #1C293C'; }}
+                onMouseLeave={e => { e.currentTarget.style.background=''; e.currentTarget.style.outline=''; }}
               >
                 <FiFolder className="w-5 h-5" />
                 <span className="text-sm font-medium">Mis favs</span>
@@ -89,7 +95,10 @@ export default function Layout({ children }) {
               {user ? (
                 <Link
                   href="/ai"
-                  className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-blue-50 text-secondary transition-colors"
+                  className="flex items-center space-x-2 px-3 py-2 transition-all"
+                  style={{color:'#1C293C', fontWeight:600, borderRadius:'8px'}}
+                  onMouseEnter={e => { e.currentTarget.style.background='#dcfce7'; e.currentTarget.style.outline='2px solid #1C293C'; }}
+                  onMouseLeave={e => { e.currentTarget.style.background=''; e.currentTarget.style.outline=''; }}
                 >
                   <FiCpu className="w-5 h-5" />
                   <span className="text-sm font-medium">Recomendación IA</span>
@@ -100,7 +109,10 @@ export default function Layout({ children }) {
                 <>
                   <Link
                     href="/study-match"
-                    className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-green-50 text-secondary transition-colors"
+                    className="flex items-center space-x-2 px-3 py-2 transition-all"
+                    style={{color:'#1C293C', fontWeight:600, borderRadius:'8px'}}
+                    onMouseEnter={e => { e.currentTarget.style.background='#dcfce7'; e.currentTarget.style.outline='2px solid #1C293C'; }}
+                    onMouseLeave={e => { e.currentTarget.style.background=''; e.currentTarget.style.outline=''; }}
                   >
                     <FiHeart className="w-5 h-5 text-primary" />
                     <span className="text-sm font-medium">Study Match</span>
@@ -108,7 +120,10 @@ export default function Layout({ children }) {
 
                   <Link
                     href="/chats"
-                    className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-blue-50 text-secondary transition-colors"
+                    className="flex items-center space-x-2 px-3 py-2 transition-all"
+                    style={{color:'#1C293C', fontWeight:600, borderRadius:'8px'}}
+                    onMouseEnter={e => { e.currentTarget.style.background='#dcfce7'; e.currentTarget.style.outline='2px solid #1C293C'; }}
+                    onMouseLeave={e => { e.currentTarget.style.background=''; e.currentTarget.style.outline=''; }}
                   >
                     <div className="relative">
                       <FiMessageCircle className="w-5 h-5" />
@@ -123,25 +138,34 @@ export default function Layout({ children }) {
 
                   <Link
                     href="/wallet"
-                    className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-yellow-50 text-secondary transition-colors"
+                    className="flex items-center space-x-2 px-3 py-2 transition-all"
+                    style={{color:'#1C293C', fontWeight:600, borderRadius:'8px'}}
+                    onMouseEnter={e => { e.currentTarget.style.background='#dcfce7'; e.currentTarget.style.outline='2px solid #1C293C'; }}
+                    onMouseLeave={e => { e.currentTarget.style.background=''; e.currentTarget.style.outline=''; }}
                   >
-                    <img src="/images/santoken.png.webp" alt="Wallet" className="w-5 h-5 rounded-full object-cover border border-yellow-300" />
+                    <img src="/images/santoken.png.png" alt="Wallet" className="w-5 h-5 object-contain" style={{mixBlendMode:'multiply'}} />
                     <span className="text-sm font-medium hidden lg:inline">Wallet</span>
                   </Link>
 
                   <Link
                     href="/upload"
-                    className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-blue-50 text-secondary transition-colors"
+                    className="flex items-center space-x-2 px-3 py-2 transition-all"
+                    style={{color:'#1C293C', fontWeight:600, borderRadius:'8px'}}
+                    onMouseEnter={e => { e.currentTarget.style.background='#dcfce7'; e.currentTarget.style.outline='2px solid #1C293C'; }}
+                    onMouseLeave={e => { e.currentTarget.style.background=''; e.currentTarget.style.outline=''; }}
                   >
                     <FiPlusSquare className="w-5 h-5" />
                     <span className="text-sm font-medium">Subir</span>
                   </Link>
 
-                  <div className="w-px h-6 bg-gray-200"></div>
+                  <div className="w-px h-6" style={{background:'#1C293C'}}></div>
 
                   <Link
                     href={`/user/${user.id}`}
-                    className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-green-50 text-primary transition-colors"
+                    className="flex items-center space-x-2 px-3 py-2 transition-all"
+                    style={{color:'#4CAF50', fontWeight:700, borderRadius:'8px'}}
+                    onMouseEnter={e => { e.currentTarget.style.background='#dcfce7'; e.currentTarget.style.outline='2px solid #1C293C'; }}
+                    onMouseLeave={e => { e.currentTarget.style.background=''; e.currentTarget.style.outline=''; }}
                   >
                     {user.avatar && user.avatar.startsWith('/uploads/') ? (
                       <img
@@ -161,7 +185,10 @@ export default function Layout({ children }) {
 
                   <button
                     onClick={handleLogout}
-                    className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-red-50 text-red-600 transition-colors"
+                    className="flex items-center space-x-2 px-3 py-2 transition-all"
+                    style={{color:'#dc2626', fontWeight:600, borderRadius:'8px', background:'transparent', border:'none', cursor:'pointer'}}
+                    onMouseEnter={e => { e.currentTarget.style.background='#fee2e2'; e.currentTarget.style.outline='2px solid #dc2626'; }}
+                    onMouseLeave={e => { e.currentTarget.style.background=''; e.currentTarget.style.outline=''; }}
                   >
                     <FiLogOut className="w-5 h-5" />
                     <span className="text-sm font-medium hidden lg:inline">Salir</span>
@@ -171,13 +198,16 @@ export default function Layout({ children }) {
                 <div className="flex gap-2 items-center h-10">
                   <Link
                     href="/login"
-                    className="px-4 py-0 h-full flex items-center text-primary font-medium hover:bg-green-50 rounded-lg transition-colors"
+                    className="px-4 py-0 h-full flex items-center font-bold transition-all"
+                    style={{color:'#4CAF50', border:'2px solid transparent', borderRadius:'8px'}}
+                    onMouseEnter={e => { e.currentTarget.style.border='2px solid #1C293C'; e.currentTarget.style.background='#dcfce7'; }}
+                    onMouseLeave={e => { e.currentTarget.style.border='2px solid transparent'; e.currentTarget.style.background=''; }}
                   >
                     Login
                   </Link>
                   <Link
                     href="/register"
-                    className="button-primary px-4 py-0 h-full flex items-center font-medium rounded-lg transition-colors"
+                    className="button-primary px-4 py-0 h-full flex items-center"
                   >
                     Registrarse
                   </Link>
@@ -188,7 +218,10 @@ export default function Layout({ children }) {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 rounded-lg hover:bg-blue-50"
+              className="md:hidden p-2 transition-all"
+              style={{borderRadius:'8px', border:'2px solid transparent', background:'transparent', cursor:'pointer'}}
+              onMouseEnter={e => { e.currentTarget.style.border='2px solid #1C293C'; e.currentTarget.style.background='#dcfce7'; }}
+              onMouseLeave={e => { e.currentTarget.style.border='2px solid transparent'; e.currentTarget.style.background=''; }}
             >
               {mobileMenuOpen ? (
                 <FiX className="w-6 h-6" />
@@ -200,7 +233,7 @@ export default function Layout({ children }) {
 
           {/* Mobile Navigation */}
           {mobileMenuOpen && (
-            <div className="md:hidden border-t border-gray-100 py-4 space-y-2">
+            <div className="md:hidden py-4 space-y-2" style={{borderTop:'2px solid #1C293C'}}>
               <Link
                 href="/"
                 onClick={() => setMobileMenuOpen(false)}
@@ -267,7 +300,7 @@ export default function Layout({ children }) {
                     onClick={() => setMobileMenuOpen(false)}
                     className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-yellow-50 text-secondary w-full"
                   >
-                    <img src="/images/santoken.png.webp" alt="SanToken" className="w-5 h-5 rounded-full object-cover border border-yellow-300" />
+                    <img src="/images/santoken.png.png" alt="SanToken" className="w-5 h-5 object-contain" style={{mixBlendMode:'multiply'}} />
                     <span>Wallet SanTokens</span>
                   </Link>
 
@@ -328,10 +361,10 @@ export default function Layout({ children }) {
       </main>
 
       {/* Footer */}
-      <footer className="bg-white border-t border-gray-200 mt-12">
+      <footer className="mt-12" style={{background:'#FBFBF9', borderTop:'2px solid #1C293C', boxShadow:'0 -4px 0 #1C293C'}}>
         <div className="max-w-6xl mx-auto px-4 py-8">
-          <p className="text-center text-muted text-sm">
-            © 2024 StudyTree - Compartiendo apuntes 📚
+          <p className="text-center text-sm font-bold" style={{color:'#1C293C'}}>
+            © 2024 StudyTree — Compartiendo apuntes 📚
           </p>
         </div>
       </footer>

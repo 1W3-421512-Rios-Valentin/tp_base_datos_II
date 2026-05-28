@@ -224,7 +224,7 @@ export default function ResourceDetail() {
         Volver
       </Link>
 
-      <div className="card border border-gray-100">
+      <div className="card">
         <h1 className="title text-2xl">{resource.title}</h1>
         
         <div className="flex items-center space-x-2 mt-2 text-sm text-gray-500">
@@ -240,11 +240,11 @@ export default function ResourceDetail() {
         )}
 
         {/* Preview del documento */}
-        <div className="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+        <div className="mt-6 p-4" style={{background:'#FBFBF9', border:'2px solid #1C293C', borderRadius:'10px', boxShadow:'3px 3px 0 #1C293C'}}>
           <p className="text-sm font-medium text-gray-700 mb-3">Previsualización del documento</p>
           {resource.fileType === 'application/pdf' ? (
             <div className="space-y-3">
-              <div className="bg-white rounded border border-gray-300 px-4 py-3 flex items-center justify-between gap-3 flex-wrap">
+              <div className="bg-white px-4 py-3 flex items-center justify-between gap-3 flex-wrap" style={{border:'2px solid #1C293C', borderRadius:'8px', boxShadow:'2px 2px 0 #1C293C'}}>
                 <div>
                   <p className="text-xs uppercase tracking-wide text-gray-400">{previewCopy.label}</p>
                   <p className="text-sm font-semibold text-gray-800">{previewCopy.title}</p>
@@ -252,7 +252,8 @@ export default function ResourceDetail() {
                 </div>
                 <button
                   onClick={downloadFile}
-                  className="text-xs text-primary hover:text-green-700 font-medium px-3 py-2 bg-green-50 rounded"
+                  className="text-xs font-bold px-3 py-2 transition-all"
+                  style={{color:'#4CAF50', background:'#dcfce7', border:'2px solid #1C293C', borderRadius:'8px', boxShadow:'2px 2px 0 #1C293C', cursor:'pointer'}}
                 >
                   Descargar
                 </button>
@@ -283,7 +284,7 @@ export default function ResourceDetail() {
           )}
         </div>
 
-        <div className="flex items-center justify-between mt-6 pt-4 border-t border-gray-100">
+        <div className="flex items-center justify-between mt-6 pt-4" style={{borderTop:'2px solid #1C293C'}}>
           <div className="flex items-center space-x-6">
             <button
               onClick={handleLike}
@@ -318,9 +319,9 @@ export default function ResourceDetail() {
       {/* Modal de comentarios */}
       {showCommentsModal && typeof window !== 'undefined' && createPortal(
         <div className="fixed inset-0 bg-black bg-opacity-50 z-[9999] flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col">
+          <div className="bg-white w-full max-w-2xl max-h-[90vh] flex flex-col" style={{border:'2px solid #1C293C', borderRadius:'14px', boxShadow:'8px 8px 0 #1C293C'}}>
             {/* Header */}
-            <div className="flex items-center justify-between p-6 border-b border-gray-200">
+            <div className="flex items-center justify-between p-6" style={{borderBottom:'2px solid #1C293C'}}>
               <h2 className="title text-lg">Comentarios ({comments.length})</h2>
               <button
                 onClick={() => {
@@ -340,7 +341,7 @@ export default function ResourceDetail() {
                 <p className="text-gray-500 text-center py-8">No hay comentarios todavía.</p>
               ) : (
                 comments.map((comment) => (
-                  <div key={comment._id} className="border border-gray-100 rounded-lg p-4 space-y-3">
+                  <div key={comment._id} className="p-4 space-y-3" style={{border:'2px solid #1C293C', borderRadius:'10px', boxShadow:'3px 3px 0 #1C293C'}}>
                     {/* Comentario principal */}
                     <div>
                       <div className="flex items-center space-x-2">
@@ -407,19 +408,23 @@ export default function ResourceDetail() {
                           e.preventDefault();
                           handleReply(e);
                         }} 
-                        className="mt-3 flex items-center space-x-2 bg-gray-50 p-3 rounded"
+                        className="mt-3 flex items-center space-x-2 p-3"
+                        style={{background:'#FBFBF9', border:'2px solid #1C293C', borderRadius:'8px'}}
                       >
                         <input
                           type="text"
                           value={replyText}
                           onChange={(e) => setReplyText(e.target.value)}
                           placeholder="Escribe una respuesta..."
-                          className="flex-1 px-3 py-2 text-sm rounded border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary"
+                          className="flex-1 px-3 py-2 text-sm"
+                          style={{border:'2px solid #1C293C', borderRadius:'6px', background:'#fff', outline:'none', fontFamily:'Inter,Poppins,sans-serif'}}
+                          onFocus={e => {e.target.style.borderColor='#4CAF50';e.target.style.boxShadow='2px 2px 0 #4CAF50';}}
+                          onBlur={e => {e.target.style.borderColor='#1C293C';e.target.style.boxShadow='none';}}
                           autoFocus
                         />
                         <button
                           type="submit"
-                          className="button-primary px-3 py-2 text-sm rounded font-medium"
+                          className="button-primary px-3 py-2 text-sm font-bold"
                         >
                           Enviar
                         </button>
@@ -432,18 +437,21 @@ export default function ResourceDetail() {
 
             {/* Footer - Nuevo comentario */}
             {user && (
-              <div className="border-t border-gray-200 p-6">
+              <div className="p-6" style={{borderTop:'2px solid #1C293C'}}>
                 <form onSubmit={handleComment} className="flex items-center space-x-3">
                   <input
                     type="text"
                     value={newComment}
                     onChange={(e) => setNewComment(e.target.value)}
                     placeholder="Escribe un comentario..."
-                    className="flex-1 px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary"
+                    className="flex-1 px-4 py-3"
+                    style={{border:'2px solid #1C293C', borderRadius:'8px', background:'#FBFBF9', outline:'none', fontFamily:'Inter,Poppins,sans-serif'}}
+                    onFocus={e => {e.target.style.borderColor='#4CAF50';e.target.style.boxShadow='3px 3px 0 #4CAF50';}}
+                    onBlur={e => {e.target.style.borderColor='#1C293C';e.target.style.boxShadow='none';}}
                   />
                   <button
                     type="submit"
-                    className="button-primary px-4 py-2 rounded-lg font-medium flex items-center"
+                    className="button-primary px-4 py-2 font-bold flex items-center"
                   >
                     Enviar
                   </button>

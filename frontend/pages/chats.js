@@ -44,12 +44,12 @@ export default function Chats() {
       <div className="max-w-2xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
+            <h1 className="text-2xl font-black flex items-center gap-2" style={{color:'#1C293C', fontFamily:'Inter,Poppins,sans-serif'}}>
               <FiMessageCircle className="text-primary" /> Chats
             </h1>
-            <p className="text-sm text-gray-500">{conversations.length} conversaciones</p>
+            <p className="text-sm" style={{color:'#4B5563'}}>{conversations.length} conversaciones</p>
           </div>
-          <Link href="/matches" className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-green-50 text-primary text-sm font-medium hover:bg-green-100 transition-all">
+          <Link href="/matches" className="flex items-center gap-1.5 px-3 py-2 text-sm font-bold transition-all" style={{color:'#4CAF50', border:'2px solid #1C293C', borderRadius:'8px', boxShadow:'2px 2px 0 #1C293C', background:'#FBFBF9'}}>
             <FiUsers className="w-4 h-4" /> Ver matches
           </Link>
         </div>
@@ -73,7 +73,8 @@ export default function Chats() {
               <Link
                 key={conv.roomId}
                 href={`/chat/${conv.other._id}`}
-                className="flex items-center gap-4 p-4 bg-white rounded-xl border border-gray-100 hover:shadow-md transition-all"
+                className="flex items-center gap-4 p-4 bg-white transition-all"
+                style={{border:'2px solid #1C293C', borderRadius:'10px', boxShadow:'3px 3px 0 #1C293C', marginBottom:'8px', textDecoration:'none', display:'flex'}}
               >
                 <div className="relative flex-shrink-0">
                   <div className="w-14 h-14 rounded-full bg-primary text-white flex items-center justify-center text-xl font-bold overflow-hidden">
