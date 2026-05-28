@@ -3,6 +3,7 @@ const router = express.Router();
 const auth = require('../middleware/auth');
 const { getDriver } = require('../config/neo4j');
 const User = require('../models/User');
+const Redemption = require('../models/Redemption');
 
 // GET /api/wallet/balance
 router.get('/balance', auth, async (req, res) => {
@@ -44,6 +45,23 @@ router.get('/history', auth, async (req, res) => {
     res.status(500).json({ message: err.message });
   } finally {
     await session.close();
+  }
+});
+
+// GET /api/wallet/redemptions — historial de canjes del usuario
+router.get('/redemptions', auth, async (req, res) => {
+  try {
+    const redemptions = await Redemption.find({ user: req.user._id })
+      .populate({
+        path: 'benefit',
+        select: 'title tokenCost',
+        populate: { path: 'place', select: 'name type' }
+      })
+      .sort({ createdAt: -1 });
+
+    res.json({ redemptions });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 });
 

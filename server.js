@@ -18,6 +18,8 @@ const userRoutes = require('./routes/users');
 const matchingRoutes = require('./routes/matching');
 const walletRoutes = require('./routes/wallet');
 const chatRoutes = require('./routes/chat');
+const placesRoutes = require('./routes/places');
+const benefitsRoutes = require('./routes/benefits');
 
 const app = express();
 const server = http.createServer(app);
@@ -25,7 +27,9 @@ const io = new Server(server, {
   cors: {
     origin: [
       'http://localhost:3000',
-      'http://192.168.1.19:3000'
+      'http://192.168.1.19:3000',
+      'http://localhost:3001',
+      'http://192.168.1.19:3001'
     ],
     credentials: true
   }
@@ -34,7 +38,9 @@ const io = new Server(server, {
 app.use(cors({
   origin: [
     'http://localhost:3000',
-    'http://192.168.1.19:3000'
+    'http://192.168.1.19:3000',
+    'http://localhost:3001',
+    'http://192.168.1.19:3001'
   ],
   credentials: true
 }));
@@ -48,6 +54,8 @@ app.use('/api/users', userRoutes);
 app.use('/api/matching', matchingRoutes);
 app.use('/api/wallet', walletRoutes);
 app.use('/api/chat', chatRoutes);
+app.use('/api/places', placesRoutes);
+app.use('/api/benefits', benefitsRoutes);
 
 app.get('/', (req, res) => res.json({ message: 'StudyTree API running' }));
 
