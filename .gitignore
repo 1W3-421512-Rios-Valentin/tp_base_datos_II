@@ -3,6 +3,9 @@ node_modules/
 .env.example
 .DS_Store
 *.log
+.next/
+frontend/.next/
+benefits-app/.next/
 *.ico
 *.png
 *.jpg

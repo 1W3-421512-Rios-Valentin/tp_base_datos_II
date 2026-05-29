@@ -39,11 +39,13 @@ export default function LoginPage() {
 
       {/* Left panel — branding */}
       <div className="hidden lg:flex lg:w-1/2 flex-col justify-between p-12 bg-secondary border-r border-white/10">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-xl font-black text-secondary">
-            🎁
-          </div>
-          <span className="text-surface font-bold text-xl tracking-tight">StudyBenefits</span>
+        <div className="flex items-center">
+          <img
+            src="/images/study-benefits-logo.png"
+            alt="StudyBenefits"
+            className="h-16 w-auto"
+            style={{ mixBlendMode: 'screen' }}
+          />
         </div>
 
         <div>
@@ -66,10 +68,11 @@ export default function LoginPage() {
 
         {/* Mobile logo */}
         <div className="lg:hidden mb-10 text-center">
-          <div className="w-14 h-14 bg-secondary rounded-2xl flex items-center justify-center text-2xl mx-auto mb-3 shadow-yellow">
-            🎁
-          </div>
-          <h2 className="text-2xl font-black text-secondary">StudyBenefits</h2>
+          <img
+            src="/images/study-benefits-logo.png"
+            alt="StudyBenefits"
+            className="h-20 w-auto mx-auto"
+          />
         </div>
 
         <div className="w-full max-w-sm">

@@ -37,6 +37,7 @@ export default function Layout({ children }) {
   const handleLogout = () => {
     logout();
     setMobileMenuOpen(false);
+    router.push('/');
   };
 
   return (

@@ -7,6 +7,17 @@
 
   body {
     @apply bg-gray-50 text-text-main font-sans antialiased;
+    user-select: none;
+    cursor: default;
+  }
+
+  input, textarea, select, [contenteditable] {
+    user-select: text;
+    cursor: text;
+  }
+
+  a, button, [role="button"], label {
+    cursor: pointer;
   }
 
   h1, h2, h3, h4 {

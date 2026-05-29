@@ -36,14 +36,13 @@ export default function Layout({ children }) {
         <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
 
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-lg font-black text-secondary shadow-yellow group-hover:scale-105 transition-transform">
-              🎁
-            </div>
-            <div className="leading-none">
-              <p className="text-surface font-bold text-base tracking-tight">StudyBenefits</p>
-              <p className="text-white/40 text-[10px] font-medium tracking-widest uppercase">powered by SanTokens</p>
-            </div>
+          <Link href="/" className="flex items-center group">
+            <img
+              src="/images/study-benefits-logo.png"
+              alt="StudyBenefits"
+              className="h-12 w-auto group-hover:scale-105 transition-transform"
+              style={{ mixBlendMode: 'screen' }}
+            />
           </Link>
 
           {/* Nav */}
